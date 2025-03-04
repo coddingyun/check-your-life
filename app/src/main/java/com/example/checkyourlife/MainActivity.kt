@@ -192,7 +192,7 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
             state = listState
         ) {
             items((0..23).toList()) { hour ->
-                TimelineHour(hour)
+                TimeColumnHour(hour)
             }
         }
         LazyColumn(
@@ -212,21 +212,6 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
                 //TimelineRow(hour, scheduledActivities, actualActivities)
                 TimeColumn(hour, actualActivities)
             }
-        }
-    }
-}
-
-@Composable
-fun TimelineHour(hour: Int) {
-    Row(Modifier.height(60.dp)) {
-        // 🕒 시간 표시 영역
-        Box(Modifier.width(48.dp)) {
-            Text(
-                text = String.format("%02d:00", hour),
-                Modifier.align(Alignment.CenterStart),
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
         }
     }
 }
