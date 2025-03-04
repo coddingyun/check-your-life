@@ -231,22 +231,6 @@ fun TimelineHour(hour: Int) {
     }
 }
 
-@Composable
-fun ActivityBlock(activity: Activity, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            //.height((activity.durationMinutes() * 60 / 60).dp)
-            .padding(horizontal = 4.dp, vertical = 2.dp)
-            .background(activity.color, shape = MaterialTheme.shapes.small)
-            .zIndex(1f)
-    ) {
-        Column(Modifier.padding(4.dp)) {
-            Text(activity.title, fontSize = 12.sp, color = Color.White, fontWeight = FontWeight.Medium)
-            Text("${activity.startTime} - ${activity.endTime}", fontSize = 10.sp, color = Color.White.copy(alpha = 0.7f))
-        }
-    }
-}
-
 data class Activity(
     val id: Int,
     val title: String,
