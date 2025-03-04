@@ -152,62 +152,10 @@ fun DailyPlannerApp() {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Box(Modifier.width(48.dp))
                 // Plan column header
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(vertical = 16.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Plan",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-
-                        IconButton(onClick = { }) {
-                            Icon(
-                                Icons.Default.Add,
-                                contentDescription = "Add",
-                                tint = Color.Gray
-                            )
-                        }
-                    }
-                }
+                TimeColumnName(name="Plan", Modifier.weight(1f))
 
                 // Reality column header
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(vertical = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Reality",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-
-                        IconButton(onClick = { }) {
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = "Track",
-                                tint = Color.Gray
-                            )
-                        }
-                    }
-                }
+                TimeColumnName(name="Reality", Modifier.weight(1f))
             }
             TimelineContent(scheduledActivities, actualActivities)
         }
@@ -312,7 +260,7 @@ fun TimelinePlan(hour: Int, scheduledActivities: List<Activity>) {
                         activity,
                         Modifier
                             .fillMaxWidth()
-                            .height(height-2.dp)  // 활동의 길이 설정
+                            .height(height)  // 활동의 길이 설정
                         //.offset(y = offset) // 시작 위치 조정
                     )
                     Box(
