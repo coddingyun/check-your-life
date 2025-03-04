@@ -99,11 +99,8 @@ class MainActivity : ComponentActivity() {
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyPlannerApp() {
-    var currentDate by remember { mutableStateOf(LocalDate.now()) }
-
     val scheduledActivities = remember {
         listOf(
             Activity(1, "Morning Workout", "06:00", "07:00", Color(0xFF2196F3)),
@@ -126,32 +123,7 @@ fun DailyPlannerApp() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                },
-                actions = {
-                    IconButton(onClick = { currentDate = currentDate.minusDays(1) }) {
-                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Previous Day")
-                    }
-
-                    // 가운데 위치하도록 하기 위해 Modifier.weight(1f)를 사용
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),  // Box가 높이를 채우도록 함
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Sat, Mar 1",
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-
-                    IconButton(onClick = { currentDate = currentDate.plusDays(1) }) {
-                        Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next Day")
-                    }
-                }
-            )
+            CheckYourLifeAppBar()
         }
     ) { paddingValues ->
         Column(
