@@ -201,7 +201,7 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
         ) {
             items((0..23).toList()) { hour ->
                 //TimelineRow(hour, scheduledActivities, actualActivities)
-                TimelinePlan(hour, scheduledActivities)
+                TimeColumn(hour, scheduledActivities)
             }
         }
         LazyColumn(
@@ -210,7 +210,7 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
         ) {
             items((0..23).toList()) { hour ->
                 //TimelineRow(hour, scheduledActivities, actualActivities)
-                TimelinePlan(hour, actualActivities)
+                TimeColumn(hour, actualActivities)
             }
         }
     }
@@ -230,210 +230,6 @@ fun TimelineHour(hour: Int) {
         }
     }
 }
-
-@Composable
-fun TimelinePlan(hour: Int, scheduledActivities: List<Activity>) {
-    Box(Modifier.fillMaxSize()) {
-        val activitiesForHour = scheduledActivities.filter { it.startHour == hour }
-        val activitiesForMiddleHour = scheduledActivities.filter {it.startHour < hour && ((it.endHour + it.endMiniute.toFloat()/60) > hour)}
-
-        if (activitiesForHour.isEmpty() && activitiesForMiddleHour.isEmpty()) {
-            // 🔹 활동이 없을 경우 빈 박스를 추가
-            Divider()
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp), // 원하는 기본 높이 지정
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "No Activity", color = Color.Gray, fontSize = 12.sp)
-            }
-        } else if (activitiesForHour.isNotEmpty()) {
-            Divider()
-            activitiesForHour.forEach { activity ->
-                val (offset, height) = calculateActivityOffsetAndHeight(activity)
-                Column {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height((activity.startMinute).mod(60).dp)
-                    ) { Text("Upper Remainder", fontSize = 12.sp) }
-                    ActivityBlock(
-                        activity,
-                        Modifier
-                            .fillMaxWidth()
-                            .height(height)  // 활동의 길이 설정
-                        //.offset(y = offset) // 시작 위치 조정
-                    )
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height((60-activity.endMiniute).mod(60).dp)
-                    ) { Text("Lower Remainder", fontSize = 12.sp) }
-                }
-
-            }
-        }
-    }
-}
-
-@Composable
-fun TimelineRow(hour: Int, scheduledActivities: List<Activity>, actualActivities: List<Activity>) {
-    Row() {
-        // 🗓️ 일정 (계획된 활동)
-        Box(Modifier.weight(1f)) {
-            Divider(Modifier.align(Alignment.TopCenter).zIndex(-1f))
-            Box(Modifier.fillMaxSize()) {
-                scheduledActivities.filter { it.startHour == hour }.forEach { activity ->
-                    val (offset, height) = calculateActivityOffsetAndHeight(activity)
-                    ActivityBlock(
-                        activity,
-                        Modifier
-                            .fillMaxWidth()
-                            .height(height)  // 활동의 길이 설정
-                            .offset(y = offset) // 시작 위치 조정
-                    )
-                }
-            }
-        }
-
-        // 📌 실제 활동
-        Box(Modifier.weight(1f)) {
-            Divider(Modifier.align(Alignment.TopCenter))
-            Box(Modifier.fillMaxSize()) {
-                actualActivities.filter { it.startHour == hour }.forEach { activity ->
-                    val (offset, height) = calculateActivityOffsetAndHeight(activity)
-                    Log.i("height: ", height.toString())
-                    ActivityBlock(
-                        activity,
-                        Modifier
-                            .fillMaxWidth()
-                            .height(height)  // 활동의 길이 설정
-                            .offset(y = offset) // 시작 위치 조정
-                    )
-                }
-            }
-        }
-    }
-
-}
-
-//@Composable
-//fun TimelineContent(
-//    modifier: Modifier = Modifier,
-//    scheduledActivities: List<Activity>,
-//    actualActivities: List<Activity>
-//) {
-//    val hourHeight = 60.dp
-//    val scrollState = rememberScrollState()
-//
-//    Box(modifier = modifier.fillMaxSize()) {
-//        // Background grid layer
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .verticalScroll(scrollState)
-//        ) {
-//
-//            // Time grid
-//            repeat(24) { hour ->
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(hourHeight)
-//                ) {
-//                    // Time label
-//                    Box(
-//                        modifier = Modifier.width(48.dp),
-//                        contentAlignment = Alignment.TopStart
-//                    ) {
-//                        Text(
-//                            text = String.format("%02d:00", hour),
-//                            modifier = Modifier.padding(start = 8.dp, top = 4.dp),
-//                            color = Color.Gray,
-//                            fontSize = 12.sp
-//                        )
-//                    }
-//
-//                    // Grid columns
-//                    Box(
-//                        modifier = Modifier.fillMaxSize()
-//                    ) {
-//                        // Horizontal divider
-//                        Divider(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(horizontal = 1.dp),
-//                            color = Color.LightGray.copy(alpha = 0.5f)
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Activity blocks overlay layer
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .verticalScroll(scrollState) // Use the same scroll state
-//        ) {
-//            // Scheduled activities (Plan column)
-//            scheduledActivities.forEach { activity ->
-//                val startOffsetY = hourHeight * (activity.startHour + (activity.startMinute / 60f))
-//                val duration = hourHeight * (activity.durationMinutes() / 60f)
-//
-//                Box(
-//                    modifier = Modifier
-//                        .padding(start = 48.dp, end = 4.dp)
-//                        .width(with(LocalDensity.current) {
-//                            (LocalConfiguration.current.screenWidthDp / 2 - 24).dp
-//                        })
-//                        .height(duration*2)
-//                        .offset(y = startOffsetY)
-//                ) {
-//                    ActivityBlock(activity)
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-
-//@Composable
-//fun TimelineRow(hour: Int) {
-//    val hourRowHeight = 60.dp // 시간 행 높이
-//
-//    Row(Modifier.height(hourRowHeight)) {
-//        // 🕒 시간 표시 영역
-//        Box(Modifier.width(48.dp)) {
-//            Text(
-//                text = String.format("%02d:00", hour),
-//                Modifier.align(Alignment.CenterStart),
-//                fontSize = 12.sp,
-//                color = Color.Gray
-//            )
-//        }
-//
-//        // 🗓️ 그리드 라인
-//        Box(Modifier.weight(1f)) {
-//            Divider(Modifier.align(Alignment.TopCenter)) // 60.dp 마다 Divider 추가
-//        }
-//
-//        Box(Modifier.weight(1f)) {
-//            Divider(Modifier.align(Alignment.TopCenter)) // Reality 컬럼도 동일하게 Divider 추가
-//        }
-//    }
-//}
-
-
-fun calculateActivityOffsetAndHeight(activity: Activity): Pair<Dp, Dp> {
-    val startMinutes = activity.startTime.toMinutes() % 60
-    val durationMinutes = activity.durationMinutes()
-
-    val offset = (startMinutes / 60f) * 60.dp  // 분을 높이 비율로 변환
-    val height = (durationMinutes / 60f) * 60.dp // 지속 시간도 높이로 변환
-
-    return Pair(offset, height)
-}
-
-
 
 @Composable
 fun ActivityBlock(activity: Activity, modifier: Modifier = Modifier) {
