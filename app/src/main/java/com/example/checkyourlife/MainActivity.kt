@@ -170,19 +170,16 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
 
     // 📌 스크롤 동기화 로직
     LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
-//        syncScroll(listState, listState2)
     listState2.scrollToItem(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
     listState3.scrollToItem(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
     }
 
     LaunchedEffect(listState2.firstVisibleItemIndex, listState2.firstVisibleItemScrollOffset) {
-//        syncScroll(listState2, listState)
         listState.scrollToItem(listState2.firstVisibleItemIndex, listState2.firstVisibleItemScrollOffset)
         listState3.scrollToItem(listState2.firstVisibleItemIndex, listState2.firstVisibleItemScrollOffset)
     }
 
     LaunchedEffect(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset) {
-//        syncScroll(listState2, listState)
         listState.scrollToItem(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset)
         listState2.scrollToItem(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset)
     }
@@ -200,7 +197,6 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
             modifier = Modifier.fillMaxWidth(0.5f)
         ) {
             items((0..23).toList()) { hour ->
-                //TimelineRow(hour, scheduledActivities, actualActivities)
                 TimeColumn(hour, scheduledActivities)
             }
         }
@@ -209,51 +205,8 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
             modifier = Modifier.fillMaxWidth()
         ) {
             items((0..23).toList()) { hour ->
-                //TimelineRow(hour, scheduledActivities, actualActivities)
                 TimeColumn(hour, actualActivities)
             }
         }
     }
 }
-
-data class Activity(
-    val id: Int,
-    val title: String,
-    val startTime: String, // "HH:mm" 형식
-    val endTime: String,   // "HH:mm" 형식
-    val color: Color
-) {
-    val startHour: Int
-        get() = startTime.split(":")[0].toInt()
-
-    val endHour: Int
-        get() = endTime.split(":")[0].toInt()
-
-    val startMinute: Int
-        get() = startTime.split(":")[1].toInt()
-
-    val endMiniute: Int
-        get() = endTime.split(":")[1].toInt()
-
-
-    fun durationMinutes(): Int {
-        val start = startTime.toMinutes()
-        val end = endTime.toMinutes()
-        return end - start
-    }
-}
-
-fun String.toMinutes(): Int {
-    val parts = this.split(":").map { it.toInt() }
-    return parts[0] * 60 + parts[1] // 전체 분으로 변환
-}
-
-
-fun addDays(date: Date, days: Int): Date {
-    val calendar = Calendar.getInstance()
-    calendar.time = date
-    calendar.add(Calendar.DAY_OF_YEAR, days)
-    return calendar.time
-}
-
-
