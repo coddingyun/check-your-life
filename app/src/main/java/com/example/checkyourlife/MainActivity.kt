@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,7 +50,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -78,29 +81,34 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val dayTimePickerViewModel: DayTimePickerViewModel by viewModels()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CheckYourLifeTheme {
-                DailyPlannerApp()
+                DailyPlannerApp(dayTimePickerViewModel)
             }
         }
     }
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DailyPlannerApp() {
+fun DailyPlannerApp(dayTimePickerViewModel: DayTimePickerViewModel) {
     val scheduledActivities = remember {
         listOf(
             Activity(1, "Morning Workout", "06:00", "07:00", Color(0xFF2196F3)),
@@ -120,6 +128,20 @@ fun DailyPlannerApp() {
             Activity(5, "Evening Run", "19:00", "20:00", Color(0xFFE91E63))
         )
     }
+
+    val timePickerState = dayTimePickerViewModel.timePickerState.value
+
+    if (timePickerState?.isShowTimePicker == true) {
+        DayTimePicker(
+            onDismiss = {
+                timePickerState.onDismiss() // 🔹 함수 호출하도록 수정
+            },
+            onConfirm = { hour, minute ->
+                timePickerState.onConfirm(hour, minute) // 🔹 hour, minute을 전달하도록 수정
+            }
+        )
+    }
+
 
     Scaffold(
         topBar = {
@@ -152,10 +174,10 @@ fun DailyPlannerApp() {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Box(Modifier.width(48.dp))
                 // Plan column header
-                TimeColumnName(name="Plan", Modifier.weight(1f))
+                TimeColumnName(name="Plan", Modifier.weight(1f), dayTimePickerViewModel)
 
                 // Reality column header
-                TimeColumnName(name="Reality", Modifier.weight(1f))
+                TimeColumnName(name="Reality", Modifier.weight(1f), dayTimePickerViewModel)
             }
             TimelineContent(scheduledActivities, actualActivities)
         }

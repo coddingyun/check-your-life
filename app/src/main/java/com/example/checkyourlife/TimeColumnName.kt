@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -24,8 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimeColumnName(name: String, modifier: Modifier) {
+fun TimeColumnName(name: String, modifier: Modifier, dayTimePickerViewModel: DayTimePickerViewModel) {
     Box(
         modifier = modifier
             //.weight(1f)
@@ -44,7 +46,9 @@ fun TimeColumnName(name: String, modifier: Modifier) {
                 modifier = Modifier.padding(start = 16.dp)
             )
 
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                dayTimePickerViewModel.showTimePickerDialog()
+            }) {
                 Icon(
                     Icons.Default.Add,
                     contentDescription = "Add",
