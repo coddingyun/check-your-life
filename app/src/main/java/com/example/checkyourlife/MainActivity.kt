@@ -90,7 +90,9 @@ import java.util.Calendar
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val dayTimePickerViewModel: DayTimePickerViewModel by viewModels()
+    private val dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime by viewModels()
+    private val dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime by viewModels()
+    private val makeBlockDialogViewModel: MakeBlockDialogViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +100,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CheckYourLifeTheme {
-                DailyPlannerApp(dayTimePickerViewModel)
+                DailyPlannerApp(dayTimePickerViewModelForStartTime, dayTimePickerViewModelForEndTime, makeBlockDialogViewModel)
             }
         }
     }
@@ -108,7 +110,10 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DailyPlannerApp(dayTimePickerViewModel: DayTimePickerViewModel) {
+fun DailyPlannerApp(
+    dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime,
+    dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime,
+    makeBlockDialogViewModel: MakeBlockDialogViewModel) {
     val scheduledActivities = remember {
         listOf(
             Activity(1, "Morning Workout", "06:00", "07:00", Color(0xFF2196F3)),
@@ -129,16 +134,20 @@ fun DailyPlannerApp(dayTimePickerViewModel: DayTimePickerViewModel) {
         )
     }
 
-    val timePickerState = dayTimePickerViewModel.timePickerState.value
+    val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value
+    val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
+    val dialogState = makeBlockDialogViewModel.blockDialogState.value
 
-    if (timePickerState?.isShowTimePicker == true) {
-        DayTimePicker(
-            onDismiss = {
-                timePickerState.onDismiss() // 🔹 함수 호출하도록 수정
+    if (dialogState?.isShowBlockDialog == true) {
+        MakeBlockDialog(
+            dayTimePickerViewModelForStartTime,
+            dayTimePickerViewModelForEndTime,
+            onConfirm = { title, color, startTime, endTime ->
+                dialogState.onConfirm(title, color, startTime, endTime)
             },
-            onConfirm = { hour, minute ->
-                timePickerState.onConfirm(hour, minute) // 🔹 hour, minute을 전달하도록 수정
-            }
+            onDismiss = {
+                dialogState.onDismiss()
+            },
         )
     }
 
@@ -174,10 +183,10 @@ fun DailyPlannerApp(dayTimePickerViewModel: DayTimePickerViewModel) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Box(Modifier.width(48.dp))
                 // Plan column header
-                TimeColumnName(name="Plan", Modifier.weight(1f), dayTimePickerViewModel)
+                TimeColumnName(name="Plan", Modifier.weight(1f), makeBlockDialogViewModel)
 
                 // Reality column header
-                TimeColumnName(name="Reality", Modifier.weight(1f), dayTimePickerViewModel)
+                TimeColumnName(name="Reality", Modifier.weight(1f), makeBlockDialogViewModel)
             }
             TimelineContent(scheduledActivities, actualActivities)
         }

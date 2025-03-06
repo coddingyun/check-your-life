@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimeColumnName(name: String, modifier: Modifier, dayTimePickerViewModel: DayTimePickerViewModel) {
+fun TimeColumnName(name: String, modifier: Modifier, makeBlockDialogViewModel: MakeBlockDialogViewModel) {
     Box(
         modifier = modifier
             //.weight(1f)
@@ -47,7 +47,7 @@ fun TimeColumnName(name: String, modifier: Modifier, dayTimePickerViewModel: Day
             )
 
             IconButton(onClick = {
-                dayTimePickerViewModel.showTimePickerDialog()
+                makeBlockDialogViewModel.showBlockDialog()
             }) {
                 Icon(
                     Icons.Default.Add,
