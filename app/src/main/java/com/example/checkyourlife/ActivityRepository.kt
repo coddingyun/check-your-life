@@ -29,4 +29,8 @@ class ActivityRepository @Inject constructor(
     suspend fun deleteActivity(activity: Activity) {
         activityDao.deleteActivity(activity)
     }
+
+    suspend fun deleteAllActivites() {
+        activityDao.deleteAllActivites()
+    }
 }

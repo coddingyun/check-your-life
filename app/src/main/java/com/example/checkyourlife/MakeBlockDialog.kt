@@ -43,7 +43,7 @@ fun MakeBlockDialog(
     dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime = hiltViewModel(),
     colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
-    onConfirm: (String, Color, Int, Int) -> Unit,
+    onConfirm: (String, Color, String, String) -> Unit,
     //makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     ) {
     val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value

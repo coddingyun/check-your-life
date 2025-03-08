@@ -12,10 +12,10 @@ import javax.inject.Inject
 data class BlockDialogState(
     var title: String = "",
     var color: Color? = null,
-    var startTime: Int? = null,
-    var endTime: Int? = null,
+    var startTime: String? = null,
+    var endTime: String? = null,
     var isShowBlockDialog: Boolean = false,
-    val onConfirm: (title: String, color: Color, startTime: Int, endTime: Int) -> Unit,
+    val onConfirm: (title: String, color: Color, startTime: String, endTime: String) -> Unit,
     val onDismiss: () -> Unit,
 )
 

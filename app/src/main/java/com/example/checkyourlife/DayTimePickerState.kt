@@ -17,10 +17,10 @@ data class DayTimePickerState(
             }
         }
 
-    val formatToTime: Int?
+    val formatToTime: String?
         get() {
             return if (selectedHour != null && selectedMinute != null) {
-                val time = selectedHour!! * 60 + selectedMinute!!
+                val time: String = String.format("%02d:%02d", selectedHour, selectedMinute)
                 time
             } else {
                 null

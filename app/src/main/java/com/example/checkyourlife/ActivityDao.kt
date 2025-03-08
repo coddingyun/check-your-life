@@ -22,6 +22,9 @@ interface ActivityDao {
     @Delete
     fun deleteActivity(activity: Activity)
 
+    @Query("DELETE FROM activities")
+    fun deleteAllActivites()
+
     @Query("DELETE FROM activities WHERE id = :activityId")
     fun deleteActivityById(activityId: Long)
 }

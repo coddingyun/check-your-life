@@ -2,6 +2,7 @@ package com.example.checkyourlife
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.checkyourlife.ui.theme.CheckYourLifeTheme
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -56,6 +58,8 @@ fun DailyPlannerApp(
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     activityViewModel: ActivityViewModel = hiltViewModel(),
 ) {
+    //activityViewModel.removeAllActivities()
+
     val scheduledActivities = remember {
         listOf(
             Activity(1, "Morning Workout", "06:00", "07:00", 0xFF2196F3.toInt(), ActivityType.PLAN.name),
@@ -84,6 +88,16 @@ fun DailyPlannerApp(
     if (dialogState?.isShowBlockDialog == true) {
         MakeBlockDialog(
             onConfirm = { title, color, startTime, endTime ->
+                activityViewModel.addActivity(
+                    Activity(
+                        title = title,
+                        colorInt = color.toArgb(),
+                        startTime = startTime,
+                        endTime = endTime,
+                        // TODO: 변경 필요
+                        type = ActivityType.PLAN.name,
+                    )
+                )
                 dialogState.onConfirm(title, color, startTime, endTime)
             },
             onDismiss = {
@@ -91,7 +105,6 @@ fun DailyPlannerApp(
             },
         )
     }
-
 
     Scaffold(
         topBar = {
