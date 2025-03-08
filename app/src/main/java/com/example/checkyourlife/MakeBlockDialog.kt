@@ -39,11 +39,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun MakeBlockDialog(
-    dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime,
-    dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime,
+    dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime = hiltViewModel(),
+    dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime = hiltViewModel(),
+    colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
     onConfirm: (String, Color, Int, Int) -> Unit,
-    colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
     //makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     ) {
     val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value

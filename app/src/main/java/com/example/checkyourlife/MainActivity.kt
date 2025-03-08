@@ -83,8 +83,6 @@ fun DailyPlannerApp(
 
     if (dialogState?.isShowBlockDialog == true) {
         MakeBlockDialog(
-            dayTimePickerViewModelForStartTime,
-            dayTimePickerViewModelForEndTime,
             onConfirm = { title, color, startTime, endTime ->
                 dialogState.onConfirm(title, color, startTime, endTime)
             },
@@ -126,10 +124,10 @@ fun DailyPlannerApp(
             Row(modifier = Modifier.fillMaxWidth()) {
                 Box(Modifier.width(48.dp))
                 // Plan column header
-                TimeColumnName(name="Plan", Modifier.weight(1f), makeBlockDialogViewModel)
+                TimeColumnName(name="Plan", Modifier.weight(1f))
 
                 // Reality column header
-                TimeColumnName(name="Reality", Modifier.weight(1f), makeBlockDialogViewModel)
+                TimeColumnName(name="Reality", Modifier.weight(1f))
             }
             TimelineContent(scheduledActivities, actualActivities)
         }

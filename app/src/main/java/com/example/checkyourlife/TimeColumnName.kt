@@ -24,10 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimeColumnName(name: String, modifier: Modifier, makeBlockDialogViewModel: MakeBlockDialogViewModel) {
+fun TimeColumnName(name: String,
+                   modifier: Modifier,
+                   makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel()
+) {
     Box(
         modifier = modifier
             //.weight(1f)
