@@ -9,7 +9,7 @@ data class Activity(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
     val title: String,
-    //val date: Long, // milliseconds
+    val date: Long = 0, // milliseconds
     val startTime: String, // "HH:mm" 형식
     val endTime: String,   // "HH:mm" 형식
     val colorInt: Int,

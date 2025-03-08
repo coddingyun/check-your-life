@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 data class MainState(
-    var date: Long,
+    var date: Long = 0,
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
