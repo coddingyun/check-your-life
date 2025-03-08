@@ -1,5 +1,10 @@
 package com.example.checkyourlife
 
+import androidx.lifecycle.LiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class ActivityRepository @Inject constructor(
@@ -11,13 +16,13 @@ class ActivityRepository @Inject constructor(
     }
 
     // 계획된 활동 가져오기
-    fun getPlannedActivities(): List<Activity> {
-        return activityDao.getPlannedActivities()
+    suspend fun getPlannedActivities(): Flow<List<Activity>> {
+        return activityDao.getPlannedActivities().flowOn(Dispatchers.IO).conflate()
     }
 
     // 실제 활동 가져오기
-    fun getActualActivities(): List<Activity> {
-        return activityDao.getActualActivities()
+    suspend fun getActualActivities(): Flow<List<Activity>> {
+        return activityDao.getActualActivities().flowOn(Dispatchers.IO).conflate()
     }
 
     // 활동 삭제

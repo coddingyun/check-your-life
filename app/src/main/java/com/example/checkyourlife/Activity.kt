@@ -11,9 +11,12 @@ data class Activity(
     val title: String,
     val startTime: String, // "HH:mm" 형식
     val endTime: String,   // "HH:mm" 형식
-    val color: Color,
+    val colorInt: Int,
     val type: String // "planned" 또는 "actual" 구분
 ) {
+    val color: Color
+        get() = Color(colorInt)
+
     val startHour: Int
         get() = startTime.split(":")[0].toInt()
 

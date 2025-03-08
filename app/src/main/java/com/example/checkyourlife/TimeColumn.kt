@@ -17,12 +17,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 
 @Composable
-fun TimeColumn(hour: Int, scheduledActivities: List<Activity>) {
+fun TimeColumn(hour: Int, scheduledActivities: List<Activity>?) {
     Box(Modifier.fillMaxSize()) {
-        val activitiesForHour = scheduledActivities.filter { it.startHour == hour }
-        val activitiesForMiddleHour = scheduledActivities.filter {it.startHour < hour && ((it.endHour + it.endMiniute.toFloat()/60) > hour)}
+        val activitiesForHour = scheduledActivities?.filter { it.startHour == hour }
+        val activitiesForMiddleHour = scheduledActivities?.filter {it.startHour < hour && ((it.endHour + it.endMiniute.toFloat()/60) > hour)}
 
-        if (activitiesForHour.isEmpty() && activitiesForMiddleHour.isEmpty()) {
+        if (((activitiesForHour == null || activitiesForMiddleHour == null))
+            || (activitiesForHour.isEmpty()
+            && activitiesForMiddleHour.isEmpty())) {
             // 🔹 활동이 없을 경우 빈 박스를 추가
             Divider()
             Box(
@@ -33,24 +35,27 @@ fun TimeColumn(hour: Int, scheduledActivities: List<Activity>) {
             ) {
                 Text(text = "No Activity", color = Color.Gray, fontSize = 12.sp)
             }
-        } else if (activitiesForHour.isNotEmpty()) {
-            Divider()
-            activitiesForHour.forEach { activity ->
-                val (offset, height) = calculateActivityOffsetAndHeight(activity)
-                Column {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height((activity.startMinute).mod(60).dp)
-                    ) { Text("Upper Remainder", fontSize = 12.sp) }
-                    ActivityBlock(
-                        activity,
-                        Modifier
-                            .fillMaxWidth()
-                            .height(height)  // 활동의 길이 설정
-                        //.offset(y = offset) // 시작 위치 조정
-                    )
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height((60-activity.endMiniute).mod(60).dp)
-                    ) { Text("Lower Remainder", fontSize = 12.sp) }
+        } else if (activitiesForHour != null) {
+            if (activitiesForHour.isNotEmpty()) {
+                Divider()
+                activitiesForHour.forEach { activity ->
+                    val (offset, height) = calculateActivityOffsetAndHeight(activity)
+                    Column {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().height((activity.startMinute).mod(60).dp)
+                        ) { Text("Upper Remainder", fontSize = 12.sp) }
+                        ActivityBlock(
+                            activity,
+                            Modifier
+                                .fillMaxWidth()
+                                .height(height)  // 활동의 길이 설정
+                            //.offset(y = offset) // 시작 위치 조정
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth().height((60-activity.endMiniute).mod(60).dp)
+                        ) { Text("Lower Remainder", fontSize = 12.sp) }
+                    }
+
                 }
 
             }

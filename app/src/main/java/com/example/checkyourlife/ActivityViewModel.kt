@@ -1,10 +1,12 @@
 package com.example.checkyourlife
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -12,13 +14,27 @@ import javax.inject.Inject
 class ActivityViewModel @Inject constructor(
     private val repository: ActivityRepository
 ) : ViewModel() {
+    private val _planndedActivities = MutableStateFlow<List<Activity>>(emptyList())
+    val plannedActivities = _planndedActivities.asStateFlow()
 
-    val plannedActivities: LiveData<List<Activity>> = liveData {
-        emit(repository.getPlannedActivities())
+    private val _actualActivities = MutableStateFlow<List<Activity>>(emptyList())
+    val actualActivities = _actualActivities.asStateFlow()
+
+    init {
+        loadActivities()
     }
 
-    val actualActivities: LiveData<List<Activity>> = liveData {
-        emit(repository.getActualActivities())
+    private fun loadActivities() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getPlannedActivities().distinctUntilChanged().collect { plannedActivity ->
+                _planndedActivities.value = plannedActivity
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getActualActivities().distinctUntilChanged().collect { actualActivity ->
+                _actualActivities.value = actualActivity
+            }
+        }
     }
 
     fun addActivity(activity: Activity) = viewModelScope.launch {

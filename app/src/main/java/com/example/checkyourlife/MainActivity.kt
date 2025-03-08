@@ -20,6 +20,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,30 +57,32 @@ class MainActivity : ComponentActivity() {
 fun DailyPlannerApp(
     dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime = hiltViewModel(),
     dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime = hiltViewModel(),
-    makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel()
+    makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
+    activityViewModel: ActivityViewModel = hiltViewModel(),
 ) {
     val scheduledActivities = remember {
         listOf(
-            Activity(1, "Morning Workout", "06:00", "07:00", Color(0xFF2196F3)),
-            Activity(2, "Team Meeting", "10:00", "11:30", Color(0xFF9C27B0)),
-            Activity(3, "Lunch Break", "12:30", "13:30", Color(0xFF4CAF50)),
-            Activity(4, "Project Work", "14:00", "17:00", Color(0xFFFFC107)),
-            Activity(5, "Evening Run", "18:30", "19:30", Color(0xFFE91E63))
+            Activity(1, "Morning Workout", "06:00", "07:00", 0xFF2196F3.toInt(), ActivityType.PLAN.name),
+            Activity(2, "Team Meeting", "10:00", "11:30", 0xFF9C27B0.toInt(), ActivityType.PLAN.name),
+            Activity(3, "Lunch Break", "12:30", "13:30", 0xFF4CAF50.toInt(), ActivityType.PLAN.name),
+            Activity(4, "Project Work", "14:00", "17:00", 0xFFFFC107.toInt(), ActivityType.PLAN.name),
+            Activity(5, "Evening Run", "18:30", "19:30", 0xFFE91E63.toInt(), ActivityType.PLAN.name)
         )
     }
 
     val actualActivities = remember {
         listOf(
-            Activity(1, "Morning Workout", "06:30", "07:15", Color(0xFF2196F3)),
-            Activity(2, "Team Meeting", "10:15", "12:00", Color(0xFF9C27B0)),
-            Activity(3, "Lunch Break", "12:30", "14:00", Color(0xFF4CAF50)),
-            Activity(4, "Project Work", "14:30", "16:45", Color(0xFFFFC107)),
-            Activity(5, "Evening Run", "19:00", "20:00", Color(0xFFE91E63))
+            Activity(6, "Morning Workout", "06:30", "07:15", 0xFF2196F3.toInt(), ActivityType.REALITY.name),
+            Activity(7, "Team Meeting", "10:15", "12:00", 0xFF9C27B0.toInt(), ActivityType.REALITY.name),
+            Activity(8, "Lunch Break", "12:30", "14:00", 0xFF4CAF50.toInt(), ActivityType.REALITY.name),
+            Activity(9, "Project Work", "14:30", "16:45", 0xFFFFC107.toInt(), ActivityType.REALITY.name),
+            Activity(10, "Evening Run", "19:00", "20:00", 0xFFE91E63.toInt(), ActivityType.REALITY.name)
         )
     }
 
-    val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value
-    val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
+    for (item in (scheduledActivities+actualActivities)) {
+        activityViewModel.addActivity(item)
+    }
     val dialogState = makeBlockDialogViewModel.blockDialogState.value
 
     if (dialogState?.isShowBlockDialog == true) {
@@ -129,13 +133,15 @@ fun DailyPlannerApp(
                 // Reality column header
                 TimeColumnName(name="Reality", Modifier.weight(1f))
             }
-            TimelineContent(scheduledActivities, actualActivities)
+            TimelineContent()
         }
     }
 }
 
 @Composable
-fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<Activity>) {
+fun TimelineContent(
+    activityViewModel: ActivityViewModel = hiltViewModel()
+) {
     val listState = rememberLazyListState()
     val listState2 = rememberLazyListState()
     val listState3 = rememberLazyListState()
@@ -155,6 +161,8 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
         listState.scrollToItem(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset)
         listState2.scrollToItem(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset)
     }
+    val plannedActivities by activityViewModel.plannedActivities.collectAsState()
+    val actualActivities by activityViewModel.actualActivities.collectAsState()
 
     Row(Modifier.fillMaxSize()) {
         LazyColumn (
@@ -169,7 +177,7 @@ fun TimelineContent(scheduledActivities: List<Activity>, actualActivities: List<
             modifier = Modifier.fillMaxWidth(0.5f)
         ) {
             items((0..23).toList()) { hour ->
-                TimeColumn(hour, scheduledActivities)
+                TimeColumn(hour, plannedActivities)
             }
         }
         LazyColumn(
