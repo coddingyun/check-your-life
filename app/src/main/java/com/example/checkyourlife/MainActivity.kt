@@ -13,13 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -55,8 +53,6 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DailyPlannerApp(
-    dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime = hiltViewModel(),
-    dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime = hiltViewModel(),
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     activityViewModel: ActivityViewModel = hiltViewModel(),
 ) {
@@ -142,49 +138,29 @@ fun DailyPlannerApp(
 fun TimelineContent(
     activityViewModel: ActivityViewModel = hiltViewModel()
 ) {
-    val listState = rememberLazyListState()
-    val listState2 = rememberLazyListState()
-    val listState3 = rememberLazyListState()
-
-    // 📌 스크롤 동기화 로직
-    LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
-    listState2.scrollToItem(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
-    listState3.scrollToItem(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
-    }
-
-    LaunchedEffect(listState2.firstVisibleItemIndex, listState2.firstVisibleItemScrollOffset) {
-        listState.scrollToItem(listState2.firstVisibleItemIndex, listState2.firstVisibleItemScrollOffset)
-        listState3.scrollToItem(listState2.firstVisibleItemIndex, listState2.firstVisibleItemScrollOffset)
-    }
-
-    LaunchedEffect(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset) {
-        listState.scrollToItem(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset)
-        listState2.scrollToItem(listState3.firstVisibleItemIndex, listState3.firstVisibleItemScrollOffset)
-    }
     val plannedActivities by activityViewModel.plannedActivities.collectAsState()
     val actualActivities by activityViewModel.actualActivities.collectAsState()
+    val scrollState = rememberScrollState()
 
-    Row(Modifier.fillMaxSize()) {
-        LazyColumn (
-            state = listState
-        ) {
-            items((0..23).toList()) { hour ->
+    Row(
+        Modifier.verticalScroll(scrollState)
+    ) {
+        Column {
+            (0..23).forEach { hour ->
                 TimeColumnHour(hour)
             }
         }
-        LazyColumn(
-            state = listState2,
-            modifier = Modifier.fillMaxWidth(0.5f)
+        Column(
+            modifier = Modifier.fillMaxWidth(0.5f) // Same modifier for the column
         ) {
-            items((0..23).toList()) { hour ->
+            (0..23).forEach { hour ->
                 TimeColumn(hour, plannedActivities)
             }
         }
-        LazyColumn(
-            state = listState3,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier.fillMaxWidth() // Same modifier for the column
         ) {
-            items((0..23).toList()) { hour ->
+            (0..23).forEach { hour ->
                 TimeColumn(hour, actualActivities)
             }
         }
