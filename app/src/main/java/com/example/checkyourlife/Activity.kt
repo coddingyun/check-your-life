@@ -9,10 +9,11 @@ data class Activity(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
     val title: String,
+    //val date: Long, // milliseconds
     val startTime: String, // "HH:mm" 형식
     val endTime: String,   // "HH:mm" 형식
     val colorInt: Int,
-    val type: String // "planned" 또는 "actual" 구분
+    val type: String // "PLAN" 또는 "REALITY" 구분
 ) {
     val color: Color
         get() = Color(colorInt)

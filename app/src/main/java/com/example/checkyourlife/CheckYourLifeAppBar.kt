@@ -20,19 +20,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.hilt.navigation.compose.hiltViewModel
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckYourLifeAppBar() {
-    var currentDate by remember { mutableStateOf(LocalDate.now()) }
+fun CheckYourLifeAppBar(
+    mainViewModel: MainViewModel = hiltViewModel()
+) {
+    //var currentDate by remember { mutableStateOf(LocalDate.now()) }
+    //val mainState = mainViewModel.mainState.value
 
     TopAppBar(
         title = {
         },
         actions = {
-            IconButton(onClick = { currentDate = currentDate.minusDays(1) }) {
+            IconButton(onClick = { mainViewModel.minusDay1() }) {
                 Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Previous Day")
             }
 
@@ -44,12 +49,12 @@ fun CheckYourLifeAppBar() {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Sat, Mar 1",
+                    text = mainViewModel.formateDate(),
                     fontWeight = FontWeight.Medium
                 )
             }
 
-            IconButton(onClick = { currentDate = currentDate.plusDays(1) }) {
+            IconButton(onClick = { mainViewModel.plusDay1() }) {
                 Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next Day")
             }
         }
