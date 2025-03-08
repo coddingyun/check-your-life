@@ -1,13 +1,18 @@
 package com.example.checkyourlife
 
 import androidx.compose.ui.graphics.Color
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "activities")
 data class Activity(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0,
     val title: String,
     val startTime: String, // "HH:mm" 형식
     val endTime: String,   // "HH:mm" 형식
-    val color: Color
+    val color: Color,
+    val type: String // "planned" 또는 "actual" 구분
 ) {
     val startHour: Int
         get() = startTime.split(":")[0].toInt()
