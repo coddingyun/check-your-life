@@ -87,18 +87,17 @@ fun DailyPlannerApp(
 
     if (dialogState?.isShowBlockDialog == true) {
         MakeBlockDialog(
-            onConfirm = { title, color, startTime, endTime ->
+            onConfirm = { title, color, startTime, endTime, activityType ->
                 activityViewModel.addActivity(
                     Activity(
                         title = title,
                         colorInt = color.toArgb(),
                         startTime = startTime,
                         endTime = endTime,
-                        // TODO: 변경 필요
-                        type = ActivityType.PLAN.name,
+                        type = activityType.name,
                     )
                 )
-                dialogState.onConfirm(title, color, startTime, endTime)
+                dialogState.onConfirm(title, color, startTime, endTime, activityType)
             },
             onDismiss = {
                 dialogState.onDismiss()

@@ -15,7 +15,8 @@ data class BlockDialogState(
     var startTime: String? = null,
     var endTime: String? = null,
     var isShowBlockDialog: Boolean = false,
-    val onConfirm: (title: String, color: Color, startTime: String, endTime: String) -> Unit,
+    var activityType: ActivityType? = null,
+    val onConfirm: (title: String, color: Color, startTime: String, endTime: String, activityType: ActivityType) -> Unit,
     val onDismiss: () -> Unit,
 )
 
@@ -28,7 +29,7 @@ class MakeBlockDialogViewModel @Inject constructor(
 
     init {
         blockDialogState.value = BlockDialogState(
-            onConfirm = { title, color, startTime, endTime ->
+            onConfirm = { title, color, startTime, endTime, activityType ->
                 blockDialogState.value = blockDialogState.value?.copy(
                     isShowBlockDialog = false,
                     title = title,
@@ -43,8 +44,11 @@ class MakeBlockDialogViewModel @Inject constructor(
         )
     }
 
-    fun showBlockDialog() {
+    fun showBlockDialog(activityType: ActivityType) {
         blockDialogState.value =
-            blockDialogState.value?.copy(isShowBlockDialog = true)
+            blockDialogState.value?.copy(
+                isShowBlockDialog = true,
+                activityType = activityType,
+            )
     }
 }

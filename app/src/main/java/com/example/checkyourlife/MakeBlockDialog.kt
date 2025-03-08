@@ -42,14 +42,15 @@ fun MakeBlockDialog(
     dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime = hiltViewModel(),
     dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime = hiltViewModel(),
     colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
+    makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
-    onConfirm: (String, Color, String, String) -> Unit,
+    onConfirm: (String, Color, String, String, ActivityType) -> Unit,
     //makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     ) {
     val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value
     val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
     val colorPickerState = colorPickerViewModel.colorPickerState.value
-    //val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
+    val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
     var activityName by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(Color.Blue) }
 
@@ -176,6 +177,7 @@ fun MakeBlockDialog(
                             colorPickerState?.color!!,
                             timePickerStateForStartTime?.formatToTime!!,
                             timePickerStateForEndTime?.formatToTime!!,
+                            blockDialogState?.activityType!!
                         )
                     }) {
                         Text(text = "확인")
