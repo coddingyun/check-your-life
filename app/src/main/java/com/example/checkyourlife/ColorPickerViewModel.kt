@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 data class ColorPickerState (
-    var color: Color? = null,
+    var color: Color = Color(0xFFFF0000),
     var isShowColorPicker: Boolean = false,
     val onConfirm: (color: Color) -> Unit,
     val onDismiss: () -> Unit

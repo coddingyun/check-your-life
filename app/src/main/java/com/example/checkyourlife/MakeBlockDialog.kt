@@ -35,16 +35,21 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun MakeBlockDialog(
     dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime,
     dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime,
     onDismiss: () -> Unit,
-    onConfirm: (String, Color, Int, Int) -> Unit
-) {
+    onConfirm: (String, Color, Int, Int) -> Unit,
+    colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
+    //makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
+    ) {
     val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value
     val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
+    val colorPickerState = colorPickerViewModel.colorPickerState.value
+    //val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
     var activityName by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(Color.Blue) }
 
@@ -69,6 +74,18 @@ fun MakeBlockDialog(
                 },
                 onConfirm = { hour, minute ->
                     timePickerStateForEndTime.onConfirm(hour, minute) // 🔹 hour, minute을 전달하도록 수정
+                }
+            )
+        }
+
+        if (colorPickerState?.isShowColorPicker == true) {
+            ColorPickerDialog(
+                initialColor = colorPickerState.color,
+                onDismiss = {
+                    colorPickerState.onDismiss()
+                },
+                onConfirm = { color ->
+                    colorPickerState.onConfirm(color)
                 }
             )
         }
@@ -103,12 +120,16 @@ fun MakeBlockDialog(
                 ) {
                     Text(text = "색상 선택")
                     Spacer(modifier = Modifier.width(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(selectedColor, shape = CircleShape)
-                            .clickable { selectedColor = Color.Red } // TODO: 색상 선택 기능 추가
-                    )
+                    IconButton(onClick = {
+                        colorPickerViewModel.showColorPickerDialog()
+                    }) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Add",
+                            tint = Color.Gray
+                        )
+                    }
+                    Text(colorPickerState?.color.toString() ?: "시간을 선택해주세요")
                 }
 
                 Column {
@@ -152,8 +173,7 @@ fun MakeBlockDialog(
                     Button(onClick = {
                         onConfirm(
                             activityName,
-                            selectedColor,
-                            // TODO: 수정 필요
+                            colorPickerState?.color!!,
                             timePickerStateForStartTime?.formatToTime!!,
                             timePickerStateForEndTime?.formatToTime!!,
                         )
