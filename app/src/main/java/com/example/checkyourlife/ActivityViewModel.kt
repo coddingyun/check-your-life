@@ -41,6 +41,10 @@ class ActivityViewModel @Inject constructor(
         repository.insertActivity(activity)
     }
 
+    fun updateActivity(activity: Activity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateActivity(activity)
+    }
+
     fun removeAllActivities() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAllActivites()
     }

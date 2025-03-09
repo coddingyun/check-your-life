@@ -25,6 +25,10 @@ class ActivityRepository @Inject constructor(
         return activityDao.getActualActivities().flowOn(Dispatchers.IO).conflate()
     }
 
+    suspend fun updateActivity(activity: Activity) {
+        activityDao.updateActivity(activity)
+    }
+
     // 활동 삭제
     suspend fun deleteActivity(activity: Activity) {
         activityDao.deleteActivity(activity)
