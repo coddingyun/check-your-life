@@ -103,6 +103,7 @@ fun DailyPlannerApp(
                 )
                 dialogState.onConfirm(title, color, startTime, endTime, activityType)
             },
+            onRemove = {},
             onDismiss = {
                 dialogState.onDismiss()
             },

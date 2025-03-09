@@ -65,6 +65,14 @@ fun ActivityBlock(
                 )
                 dialogState.onConfirm(title, color, startTime, endTime, activityType)
             },
+            onRemove = {
+                activityViewModel.removeActivity(
+                    activity.copy(
+                        id = dialogState.id!!,
+                    )
+                )
+                makeBlockDialogViewModel.closeUpdateBlockDialog()
+            },
             onDismiss = {
                 dialogState.onDismiss()
             },

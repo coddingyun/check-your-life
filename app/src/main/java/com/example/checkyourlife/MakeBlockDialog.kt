@@ -44,6 +44,7 @@ fun MakeBlockDialog(
     colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
+    onRemove: () -> Unit,
     onConfirm: (String, Color, String, String, ActivityType) -> Unit,
     //makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     ) {
@@ -183,6 +184,13 @@ fun MakeBlockDialog(
                 ) {
                     Button(onClick = { onDismiss() }) {
                         Text(text = "취소")
+                    }
+                    if (blockDialogState?.isShowUpdateBlockDialog == true) {
+                        Button(onClick = {
+                            onRemove()
+                        }) {
+                            Text(text = "삭제")
+                        }
                     }
                     Button(onClick = {
                         onConfirm(

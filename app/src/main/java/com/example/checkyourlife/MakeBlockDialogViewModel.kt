@@ -116,4 +116,11 @@ class MakeBlockDialogViewModel @Inject constructor(
                 activityType = activityType,
             )
     }
+
+    fun closeUpdateBlockDialog() {
+        blockDialogState.value =
+            blockDialogState.value?.copy(
+                isShowUpdateBlockDialog = false,
+            )
+    }
 }
