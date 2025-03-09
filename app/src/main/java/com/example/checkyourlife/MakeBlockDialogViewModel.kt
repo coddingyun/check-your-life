@@ -10,11 +10,17 @@ import javax.inject.Inject
 
 // TODO: 맞게 바꾸어야 함
 data class BlockDialogState(
+    var id: Long? = null, // Activity id 임시 저장소 (update할 때를 위한)
     var title: String = "",
-    var color: Color? = null,
+    var color: Color = Color(0xFFFF0000),
+    var startHour: Int? = null,
+    var startMinute: Int? = null,
+    var endHour: Int? = null,
+    var endMinute: Int? = null,
     var startTime: String? = null,
     var endTime: String? = null,
-    var isShowBlockDialog: Boolean = false,
+    var isShowMakeBlockDialog: Boolean = false,
+    var isShowUpdateBlockDialog: Boolean = false,
     var activityType: ActivityType? = null,
     val onConfirm: (title: String, color: Color, startTime: String, endTime: String, activityType: ActivityType) -> Unit,
     val onDismiss: () -> Unit,
@@ -31,23 +37,82 @@ class MakeBlockDialogViewModel @Inject constructor(
         blockDialogState.value = BlockDialogState(
             onConfirm = { title, color, startTime, endTime, activityType ->
                 blockDialogState.value = blockDialogState.value?.copy(
-                    isShowBlockDialog = false,
-                    title = title,
-                    color = color,
+                    isShowMakeBlockDialog = false,
+                    isShowUpdateBlockDialog = false,
+                    title = "",
+                    color = Color(0xFFFF0000),
+                    startHour = null,
+                    startMinute = null,
+                    endHour = null,
+                    endMinute = null,
                 )
             },
             onDismiss = {
                 blockDialogState.value = blockDialogState.value?.copy(
-                    isShowBlockDialog = false
+                    isShowMakeBlockDialog = false,
+                    isShowUpdateBlockDialog = false,
+                    title = "",
+                    color = Color(0xFFFF0000),
+                    startHour = null,
+                    startMinute = null,
+                    endHour = null,
+                    endMinute = null,
                 )
             }
         )
     }
 
-    fun showBlockDialog(activityType: ActivityType) {
+    fun setStartTime(hour: Int, minute: Int) {
+        blockDialogState.value = blockDialogState.value?.copy(
+            startHour = hour,
+            startMinute = minute
+        )
+    }
+
+    fun setEndTime(hour: Int, minute: Int) {
+        blockDialogState.value = blockDialogState.value?.copy(
+            endHour = hour,
+            endMinute = minute
+        )
+    }
+
+    fun setColor(color: Color) {
+        blockDialogState.value = blockDialogState.value?.copy(
+            color = color,
+        )
+    }
+
+    fun putActivityInfo(activity: Activity) {
+        blockDialogState.value = blockDialogState.value?.copy(
+            id = activity.id,
+            title = activity.title,
+            startHour = activity.startHour,
+            startMinute = activity.startMinute,
+            endHour = activity.endHour,
+            endMinute = activity.endMiniute,
+            color = activity.color,
+            activityType = if (activity.type == "PLAN") ActivityType.PLAN else ActivityType.REALITY
+        )
+    }
+
+    fun updateTitle(newTitle: String) {
+        blockDialogState.value = blockDialogState.value?.copy(
+            title = newTitle,
+        )
+    }
+
+    fun showMakeBlockDialog(activityType: ActivityType) {
         blockDialogState.value =
             blockDialogState.value?.copy(
-                isShowBlockDialog = true,
+                isShowMakeBlockDialog = true,
+                activityType = activityType,
+            )
+    }
+
+    fun showUpdateBlockDialog(activityType: ActivityType) {
+        blockDialogState.value =
+            blockDialogState.value?.copy(
+                isShowUpdateBlockDialog = true,
                 activityType = activityType,
             )
     }

@@ -64,6 +64,7 @@ fun MakeBlockDialog(
                 },
                 onConfirm = { hour, minute ->
                     timePickerStateForStartTime.onConfirm(hour, minute) // 🔹 hour, minute을 전달하도록 수정
+                    makeBlockDialogViewModel.setStartTime(hour, minute)
                 }
             )
         }
@@ -75,18 +76,20 @@ fun MakeBlockDialog(
                 },
                 onConfirm = { hour, minute ->
                     timePickerStateForEndTime.onConfirm(hour, minute) // 🔹 hour, minute을 전달하도록 수정
+                    makeBlockDialogViewModel.setEndTime(hour, minute)
                 }
             )
         }
 
         if (colorPickerState?.isShowColorPicker == true) {
             ColorPickerDialog(
-                initialColor = colorPickerState.color,
+                //initialColor = colorPickerState.color,
                 onDismiss = {
                     colorPickerState.onDismiss()
                 },
                 onConfirm = { color ->
                     colorPickerState.onConfirm(color)
+                    //makeBlockDialogViewModel.setColor(color)
                 }
             )
         }
@@ -107,8 +110,10 @@ fun MakeBlockDialog(
 
                 // 활동명 입력
                 OutlinedTextField(
-                    value = activityName,
-                    onValueChange = { activityName = it },
+                    value = blockDialogState?.title ?: "",
+                    onValueChange = { newTitle ->
+                        makeBlockDialogViewModel.updateTitle(newTitle)
+                    },
                     label = { Text("활동명") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -130,7 +135,7 @@ fun MakeBlockDialog(
                             tint = Color.Gray
                         )
                     }
-                    Text(colorPickerState?.color.toString() ?: "시간을 선택해주세요")
+                    Text(blockDialogState?.color.toString() ?: "컬러를 선택해주세요")
                 }
 
                 Column {
@@ -146,7 +151,11 @@ fun MakeBlockDialog(
                             )
                         }
                     }
-                    Text(timePickerStateForStartTime?.selectedHHmm ?: "시간을 선택해주세요")
+                    if (blockDialogState?.startHour != null && blockDialogState.startMinute != null) {
+                        Text(formatHHmm(blockDialogState?.startHour!!, blockDialogState?.startMinute!!))
+                    } else {
+                        Text("시간을 선택해주세요")
+                    }
 
                     Row {
                         Text("끝 시간 선택")
@@ -160,7 +169,11 @@ fun MakeBlockDialog(
                             )
                         }
                     }
-                    Text(timePickerStateForEndTime?.selectedHHmm ?: "시간을 선택해주세요")
+                    if (blockDialogState?.endHour != null && blockDialogState.endMinute != null) {
+                        Text(formatHHmm(blockDialogState?.endHour!!, blockDialogState?.endMinute!!))
+                    } else {
+                        Text("시간을 선택해주세요")
+                    }
                 }
 
                 // 버튼 (취소 / 확인)
@@ -173,11 +186,11 @@ fun MakeBlockDialog(
                     }
                     Button(onClick = {
                         onConfirm(
-                            activityName,
-                            colorPickerState?.color!!,
-                            timePickerStateForStartTime?.formatToTime!!,
-                            timePickerStateForEndTime?.formatToTime!!,
-                            blockDialogState?.activityType!!
+                            blockDialogState?.title!!,
+                            blockDialogState?.color!!,
+                            formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
+                            formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
+                            blockDialogState.activityType!!
                         )
                     }) {
                         Text(text = "확인")

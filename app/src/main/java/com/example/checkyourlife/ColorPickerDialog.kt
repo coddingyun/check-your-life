@@ -26,13 +26,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun ColorPickerDialog(
-    initialColor: Color,
     colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
+    makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
     onConfirm: (Color) -> Unit
 ) {
-    var selectedColor by remember { mutableStateOf(initialColor) }
-    var colorPickerState = colorPickerViewModel.colorPickerState.value
+    //var selectedColor by remember { mutableStateOf(initialColor) }
+    //var colorPickerState = colorPickerViewModel.colorPickerState.value
+    val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
 
     Dialog(onDismissRequest = { onDismiss() }) {
         Card(
@@ -45,8 +46,8 @@ fun ColorPickerDialog(
             ) {
                 Text(text = "색상을 선택하세요", fontSize = 18.sp, modifier = Modifier.padding(bottom = 16.dp))
 
-                ColorPicker(selectedColor = selectedColor) { newColor ->
-                    selectedColor = newColor
+                ColorPicker(selectedColor = blockDialogState?.color!!) { newColor ->
+                    makeBlockDialogViewModel.setColor(newColor)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -59,7 +60,7 @@ fun ColorPickerDialog(
                         Text(text = "취소")
                     }
 
-                    Button(onClick = { onConfirm(selectedColor) }) {
+                    Button(onClick = { onConfirm(blockDialogState.color!!) }) {
                         Text(text = "확인")
                     }
                 }

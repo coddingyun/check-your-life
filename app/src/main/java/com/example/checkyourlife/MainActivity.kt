@@ -59,7 +59,7 @@ fun DailyPlannerApp(
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     activityViewModel: ActivityViewModel = hiltViewModel(),
 ) {
-    //activityViewModel.removeAllActivities()
+//    activityViewModel.removeAllActivities()
     val TEMP = 1741359600000
 
     val scheduledActivities = remember {
@@ -88,7 +88,7 @@ fun DailyPlannerApp(
     val dialogState = makeBlockDialogViewModel.blockDialogState.value
     val mainState = mainViewModel.mainState.value
 
-    if (dialogState?.isShowBlockDialog == true) {
+    if (dialogState?.isShowMakeBlockDialog == true) {
         MakeBlockDialog(
             onConfirm = { title, color, startTime, endTime, activityType ->
                 activityViewModel.addActivity(
@@ -150,6 +150,7 @@ fun DailyPlannerApp(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TimelineContent(
     activityViewModel: ActivityViewModel = hiltViewModel(),

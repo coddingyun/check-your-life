@@ -50,7 +50,7 @@ fun TimeColumnName(name: String,
             )
 
             IconButton(onClick = {
-                makeBlockDialogViewModel.showBlockDialog(
+                makeBlockDialogViewModel.showMakeBlockDialog(
                     if (name == "Plan") ActivityType.PLAN else ActivityType.REALITY
                 )
             }) {
