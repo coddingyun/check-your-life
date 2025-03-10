@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,7 @@ fun MakeBlockDialog(
     dayTimePickerViewModelForEndTime: DayTimePickerViewModelForEndTime = hiltViewModel(),
     colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
+    activityViewModel: ActivityViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
     onRemove: () -> Unit,
     onConfirm: (String, Color, String, String, ActivityType) -> Unit,
@@ -60,6 +62,15 @@ fun MakeBlockDialog(
     var selectedColor by remember { mutableStateOf(Color.Blue) }
     var (isValidated, setIsValidated) = remember { mutableStateOf(true) }
     var (isDurationValidated, setIsDurationValidated) = remember { mutableStateOf(true) }
+    var (isActivityValidated, setIsActivityValidated) = remember { mutableStateOf(true) }
+    val activities = remember(blockDialogState?.activityType) {
+        if (blockDialogState?.activityType == ActivityType.PLAN) {
+            activityViewModel.plannedActivities
+        } else {
+            activityViewModel.actualActivities
+        }
+    }.collectAsState()
+
 
     Dialog(onDismissRequest = {}) {
         // TODO: 활동명, 컬러, 시작시간, 종료시간 받기
@@ -268,6 +279,12 @@ fun MakeBlockDialog(
                         fontSize = 12.sp,
                         color = Color.Red,
                     )
+                } else if (isActivityValidated == false) {
+                    Text(
+                        text = "해당 시간대에 이미 활동이 존재합니다.",
+                        fontSize = 12.sp,
+                        color = Color.Red,
+                    )
                 } else {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -281,6 +298,7 @@ fun MakeBlockDialog(
                         onClick = {
                             setIsValidated(true)
                             setIsDurationValidated(true)
+                            setIsActivityValidated(true)
                             onDismiss()
                       },
                         shape = RoundedCornerShape(8.dp)
@@ -292,6 +310,7 @@ fun MakeBlockDialog(
                             onClick = {
                                 setIsValidated(true)
                                 setIsDurationValidated(true)
+                                setIsActivityValidated(true)
                                 onRemove()
                             },
                             shape = RoundedCornerShape(8.dp)) {
@@ -307,9 +326,26 @@ fun MakeBlockDialog(
                                 setIsValidated(true)
                                 setIsDurationValidated(false)
                             }
+                            else if (
+                                activities.value.any { activity ->
+                                    val activityStart = activity.startHour * 60 + activity.startMinute
+                                    val activityEnd = activity.endHour * 60 + activity.endMiniute
+
+                                    val newStart = blockDialogState.startHour!! * 60 + blockDialogState.startMinute!!
+                                    val newEnd = blockDialogState.endHour!! * 60 + blockDialogState.endMinute!!
+
+                                    // 시간이 겹치는 경우
+                                    (newStart < activityEnd && newEnd > activityStart)
+                                }
+                            ) {
+                                setIsValidated(true)
+                                setIsDurationValidated(true)
+                                setIsActivityValidated(false)
+                            }
                             else {
                                 setIsValidated(true)
                                 setIsDurationValidated(true)
+                                setIsActivityValidated(true)
                                 onConfirm(
                                     blockDialogState?.title!!,
                                     blockDialogState?.color!!,
