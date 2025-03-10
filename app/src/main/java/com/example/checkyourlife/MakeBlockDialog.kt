@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,8 +20,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
@@ -96,18 +103,26 @@ fun MakeBlockDialog(
         }
 
         Card(
-            shape = RoundedCornerShape(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Column(
                 modifier = Modifier
-                    .width(320.dp)
-                    .wrapContentHeight()
-                    .background(Color.White)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(text = "활동 추가", fontSize = 18.sp)
+                Text(
+                    text = "활동 추가",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
                 // 활동명 입력
                 OutlinedTextField(
@@ -117,90 +132,164 @@ fun MakeBlockDialog(
                     },
                     label = { Text("활동명") },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
                 // 색상 선택 버튼
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(text = "색상 선택")
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(onClick = {
-                        colorPickerViewModel.showColorPickerDialog()
-                    }) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = "Add",
-                            tint = Color.Gray
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "색상",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clip(CircleShape)
+                                .background(blockDialogState?.color!!)
+                                .clickable(
+                                    onClick = {
+                                        colorPickerViewModel.showColorPickerDialog()
+                                    }
+                                )
                         )
                     }
-                    Text(blockDialogState?.color.toString() ?: "컬러를 선택해주세요")
+                    Divider()
                 }
 
-                Column {
-                    Row {
-                        Text("시작 시간 선택")
-                        IconButton(onClick = {
-                            dayTimePickerViewModelForStartTime.showTimePickerDialog()
-                        }) {
+                Column (
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row (
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "시작 시간 선택",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+
+                        IconButton(
+                            onClick = {
+                                dayTimePickerViewModelForStartTime.showTimePickerDialog()
+                            },
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                        ) {
                             Icon(
                                 Icons.Default.Add,
                                 contentDescription = "Add",
-                                tint = Color.Gray
+                                tint = Color.Gray,
+                                modifier = Modifier.size(16.dp)
                             )
                         }
                     }
                     if (blockDialogState?.startHour != null && blockDialogState.startMinute != null) {
                         Text(formatHHmm(blockDialogState?.startHour!!, blockDialogState?.startMinute!!))
                     } else {
-                        Text("시간을 선택해주세요")
+                        Text(
+                            text = "시간을 선택해주세요",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
                     }
 
-                    Row {
-                        Text("끝 시간 선택")
-                        IconButton(onClick = {
-                            dayTimePickerViewModelForEndTime.showTimePickerDialog()
-                        }) {
+                    Divider()
+
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "끝 시간 선택",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        IconButton(
+                            onClick = {
+                                dayTimePickerViewModelForEndTime.showTimePickerDialog()
+                            },
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                        ) {
                             Icon(
                                 Icons.Default.Add,
                                 contentDescription = "Add",
-                                tint = Color.Gray
+                                tint = Color.Gray,
+                                modifier = Modifier.size(16.dp)
                             )
                         }
                     }
                     if (blockDialogState?.endHour != null && blockDialogState.endMinute != null) {
                         Text(formatHHmm(blockDialogState?.endHour!!, blockDialogState?.endMinute!!))
                     } else {
-                        Text("시간을 선택해주세요")
+                        Text(
+                            text = "시간을 선택해주세요",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // 버튼 (취소 / 확인)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Button(onClick = { onDismiss() }) {
+                    OutlinedButton(
+                        onClick = { onDismiss() },
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
                         Text(text = "취소")
                     }
                     if (blockDialogState?.isShowUpdateBlockDialog == true) {
-                        Button(onClick = {
-                            onRemove()
-                        }) {
+                        OutlinedButton(
+                            onClick = {
+                                onRemove()
+                            },
+                            shape = RoundedCornerShape(8.dp)) {
                             Text(text = "삭제")
                         }
                     }
-                    Button(onClick = {
-                        onConfirm(
-                            blockDialogState?.title!!,
-                            blockDialogState?.color!!,
-                            formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
-                            formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
-                            blockDialogState.activityType!!
-                        )
-                    }) {
+                    Button(
+                        onClick = {
+                            onConfirm(
+                                blockDialogState?.title!!,
+                                blockDialogState?.color!!,
+                                formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
+                                formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
+                                blockDialogState.activityType!!
+                            )
+                        },
+                        shape = RoundedCornerShape(8.dp)) {
                         Text(text = "확인")
                     }
                 }
