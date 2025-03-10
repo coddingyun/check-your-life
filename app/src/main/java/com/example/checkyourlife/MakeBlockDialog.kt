@@ -1,6 +1,5 @@
 package com.example.checkyourlife
 
-import android.icu.text.CaseMap.Title
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,8 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -61,6 +58,7 @@ fun MakeBlockDialog(
     val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
     var activityName by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(Color.Blue) }
+    var (isValidated, setIsValidated) = remember { mutableStateOf(true) }
 
     Dialog(onDismissRequest = {}) {
         // TODO: 활동명, 컬러, 시작시간, 종료시간 받기
@@ -257,7 +255,15 @@ fun MakeBlockDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                if (isValidated == false) {
+                    Text(
+                        text = "입력하지 않은 값이 있는 지 확인해주세요.",
+                        fontSize = 12.sp,
+                        color = Color.Red,
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
                 // 버튼 (취소 / 확인)
                 Row(
@@ -265,7 +271,10 @@ fun MakeBlockDialog(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     OutlinedButton(
-                        onClick = { onDismiss() },
+                        onClick = {
+                            setIsValidated(true)
+                            onDismiss()
+                      },
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(text = "취소")
@@ -273,6 +282,7 @@ fun MakeBlockDialog(
                     if (blockDialogState?.isShowUpdateBlockDialog == true) {
                         OutlinedButton(
                             onClick = {
+                                setIsValidated(true)
                                 onRemove()
                             },
                             shape = RoundedCornerShape(8.dp)) {
@@ -281,17 +291,23 @@ fun MakeBlockDialog(
                     }
                     Button(
                         onClick = {
-                            onConfirm(
-                                blockDialogState?.title!!,
-                                blockDialogState?.color!!,
-                                formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
-                                formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
-                                blockDialogState.activityType!!
-                            )
+                            if (blockDialogState?.title == "" || blockDialogState?.startHour == null || blockDialogState.endHour == null) {
+                                setIsValidated(false)
+                            }
+                            else {
+                                setIsValidated(true)
+                                onConfirm(
+                                    blockDialogState?.title!!,
+                                    blockDialogState?.color!!,
+                                    formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
+                                    formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
+                                    blockDialogState.activityType!!
+                                )
+                            }
                         },
                         shape = RoundedCornerShape(8.dp)) {
-                        Text(text = "확인")
-                    }
+                            Text(text = "확인")
+                        }
                 }
             }
         }
