@@ -31,10 +31,11 @@ fun TimeColumn(hour: Int, scheduledActivities: List<Activity>?) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp), // 원하는 기본 높이 지정
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "No Activity", color = Color.Gray, fontSize = 12.sp)
-            }
+                //contentAlignment = Alignment.Center
+            )
+//            {
+//                Text(text = "No Activity", color = Color.Gray, fontSize = 12.sp)
+//            }
         } else if (activitiesForHour != null) {
             if (activitiesForHour.isNotEmpty()) {
                 Divider()
@@ -43,7 +44,8 @@ fun TimeColumn(hour: Int, scheduledActivities: List<Activity>?) {
                     Column {
                         Box(
                             modifier = Modifier.fillMaxWidth().height((activity.startMinute).mod(60).dp)
-                        ) { Text("Upper Remainder", fontSize = 12.sp) }
+                        )
+                        //{ Text("Upper Remainder", fontSize = 12.sp) }
                         ActivityBlock(
                             activity,
                             Modifier
@@ -53,7 +55,8 @@ fun TimeColumn(hour: Int, scheduledActivities: List<Activity>?) {
                         )
                         Box(
                             modifier = Modifier.fillMaxWidth().height((60-activity.endMiniute).mod(60).dp)
-                        ) { Text("Lower Remainder", fontSize = 12.sp) }
+                        )
+                        //{ Text("Lower Remainder", fontSize = 12.sp) }
                     }
 
                 }

@@ -59,6 +59,7 @@ fun MakeBlockDialog(
     var activityName by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(Color.Blue) }
     var (isValidated, setIsValidated) = remember { mutableStateOf(true) }
+    var (isDurationValidated, setIsDurationValidated) = remember { mutableStateOf(true) }
 
     Dialog(onDismissRequest = {}) {
         // TODO: 활동명, 컬러, 시작시간, 종료시간 받기
@@ -261,6 +262,12 @@ fun MakeBlockDialog(
                         fontSize = 12.sp,
                         color = Color.Red,
                     )
+                } else if (isDurationValidated == false) {
+                    Text(
+                        text = "시작 시간이 끝 시간보다 작아야 합니다.",
+                        fontSize = 12.sp,
+                        color = Color.Red,
+                    )
                 } else {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -273,6 +280,7 @@ fun MakeBlockDialog(
                     OutlinedButton(
                         onClick = {
                             setIsValidated(true)
+                            setIsDurationValidated(true)
                             onDismiss()
                       },
                         shape = RoundedCornerShape(8.dp)
@@ -283,6 +291,7 @@ fun MakeBlockDialog(
                         OutlinedButton(
                             onClick = {
                                 setIsValidated(true)
+                                setIsDurationValidated(true)
                                 onRemove()
                             },
                             shape = RoundedCornerShape(8.dp)) {
@@ -294,8 +303,13 @@ fun MakeBlockDialog(
                             if (blockDialogState?.title == "" || blockDialogState?.startHour == null || blockDialogState.endHour == null) {
                                 setIsValidated(false)
                             }
+                            else if ((blockDialogState.startHour!!*60 + blockDialogState.startMinute!!) >= (blockDialogState.endHour!!*60 + blockDialogState.endHour!!)) {
+                                setIsValidated(true)
+                                setIsDurationValidated(false)
+                            }
                             else {
                                 setIsValidated(true)
+                                setIsDurationValidated(true)
                                 onConfirm(
                                     blockDialogState?.title!!,
                                     blockDialogState?.color!!,
