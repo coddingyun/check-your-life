@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     debugImplementation("com.github.amitshekhariitbhu.Android-Debug-Database:debug-db:1.0.7")
+    implementation("com.google.android.gms:play-services-ads:24.0.0")
 }
 
 // Allow references to generated code
