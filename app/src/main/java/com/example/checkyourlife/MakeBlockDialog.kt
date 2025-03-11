@@ -272,6 +272,8 @@ fun MakeBlockDialog(
                     }
                 }
 
+                Spacer(modifier = Modifier.height(1.dp))
+
                 if (isValidated == false) {
                     Text(
                         text = "입력하지 않은 값이 있는 지 확인해주세요.",
