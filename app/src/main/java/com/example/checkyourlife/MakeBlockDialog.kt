@@ -1,5 +1,7 @@
 package com.example.checkyourlife
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MakeBlockDialog(
     dayTimePickerViewModelForStartTime: DayTimePickerViewModelForStartTime = hiltViewModel(),
@@ -49,6 +52,7 @@ fun MakeBlockDialog(
     colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     activityViewModel: ActivityViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
     onRemove: () -> Unit,
     onConfirm: (String, Color, String, String, ActivityType) -> Unit,
@@ -58,6 +62,7 @@ fun MakeBlockDialog(
     val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
     val colorPickerState = colorPickerViewModel.colorPickerState.value
     val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
+    val mainState = mainViewModel.mainState.value
     var activityName by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(Color.Blue) }
     var (isValidated, setIsValidated) = remember { mutableStateOf(true) }
@@ -327,7 +332,7 @@ fun MakeBlockDialog(
                                 setIsDurationValidated(false)
                             }
                             else if (
-                                activities.value.any { activity ->
+                                activities.value.filter { it.date == mainState?.date!! }.any { activity ->
                                     val activityStart = activity.startHour * 60 + activity.startMinute
                                     val activityEnd = activity.endHour * 60 + activity.endMiniute
 
