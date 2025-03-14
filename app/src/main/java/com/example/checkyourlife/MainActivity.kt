@@ -63,32 +63,6 @@ fun DailyPlannerApp(
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     activityViewModel: ActivityViewModel = hiltViewModel(),
 ) {
-//    activityViewModel.removeAllActivities()
-    val TEMP = 1741359600000
-
-    val scheduledActivities = remember {
-        listOf(
-            Activity(1, "Morning Workout", TEMP, "06:00", "07:00", 0xFF2196F3.toInt(), ActivityType.PLAN.name),
-            Activity(2, "Team Meeting", TEMP, "10:00", "11:30", 0xFF9C27B0.toInt(), ActivityType.PLAN.name),
-            Activity(3, "Lunch Break", TEMP, "12:30", "13:30", 0xFF4CAF50.toInt(), ActivityType.PLAN.name),
-            Activity(4, "Project Work",TEMP, "14:00", "17:00", 0xFFFFC107.toInt(), ActivityType.PLAN.name),
-            Activity(5, "Evening Run",TEMP, "18:30", "19:30", 0xFFE91E63.toInt(), ActivityType.PLAN.name)
-        )
-    }
-
-    val actualActivities = remember {
-        listOf(
-            Activity(6, "Morning Workout",TEMP, "06:30", "07:15", 0xFF2196F3.toInt(), ActivityType.REALITY.name),
-            Activity(7, "Team Meeting",TEMP, "10:15", "12:00", 0xFF9C27B0.toInt(), ActivityType.REALITY.name),
-            Activity(8, "Lunch Break",TEMP, "12:30", "14:00", 0xFF4CAF50.toInt(), ActivityType.REALITY.name),
-            Activity(9, "Project Work",TEMP, "14:30", "16:45", 0xFFFFC107.toInt(), ActivityType.REALITY.name),
-            Activity(10, "Evening Run",TEMP, "19:00", "20:00", 0xFFE91E63.toInt(), ActivityType.REALITY.name)
-        )
-    }
-
-    for (item in (scheduledActivities+actualActivities)) {
-        activityViewModel.addActivity(item)
-    }
     val dialogState = makeBlockDialogViewModel.blockDialogState.value
     val mainState = mainViewModel.mainState.value
 
