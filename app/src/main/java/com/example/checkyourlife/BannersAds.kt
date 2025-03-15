@@ -13,7 +13,7 @@ import com.google.android.gms.ads.AdView
 
 @Composable
 fun BannersAds(modifier: Modifier = Modifier) {
-    val adId = stringResource(R.string.sample_banner_id)
+    val adId = stringResource(R.string.banner_id)
 
     AndroidView(
         modifier = modifier.fillMaxWidth(),
