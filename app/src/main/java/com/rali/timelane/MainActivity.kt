@@ -153,18 +153,24 @@ fun TimelineContent(
                 TimeColumnHour(hour)
             }
         }
-        Column(
-            modifier = Modifier.fillMaxWidth(0.5f) // Same modifier for the column
+        Box(
+            modifier = Modifier.fillMaxWidth(0.5f)
         ) {
-            (0..23).forEach { hour ->
-                TimeColumn(hour, plannedActivities.filter { it.date == mainState?.date!! })
+            DividerLayer()
+            Column(modifier = Modifier.fillMaxSize()) {
+                (0..23).forEach { hour ->
+                    TimeColumn(hour, plannedActivities.filter { it.date == mainState?.date!! })
+                }
             }
         }
-        Column(
-            modifier = Modifier.fillMaxWidth() // Same modifier for the column
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            (0..23).forEach { hour ->
-                TimeColumn(hour, actualActivities.filter { it.date == mainState?.date!! })
+            DividerLayer()
+            Column(modifier = Modifier.fillMaxSize()) {
+                (0..23).forEach { hour ->
+                    TimeColumn(hour, actualActivities.filter { it.date == mainState?.date!! })
+                }
             }
         }
     }

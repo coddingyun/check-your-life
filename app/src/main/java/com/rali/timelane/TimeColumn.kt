@@ -24,7 +24,6 @@ fun TimeColumn(hour: Int, scheduledActivities: List<Activity>?) {
             || (activitiesForHour.isEmpty()
             && activitiesForMiddleHour.isEmpty())) {
             // 🔹 활동이 없을 경우 빈 박스를 추가
-            Divider()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -32,7 +31,6 @@ fun TimeColumn(hour: Int, scheduledActivities: List<Activity>?) {
             )
         } else if (activitiesForHour != null) {
             if (activitiesForHour.isNotEmpty()) {
-                Divider()
                 activitiesForHour.forEach { activity ->
                     val (offset, height) = calculateActivityOffsetAndHeight(activity)
                     Column {
