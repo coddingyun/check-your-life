@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.checkyourlife"
+    namespace = "com.rali.timelane"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.checkyourlife"
+        applicationId = "com.rali.timelane"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
