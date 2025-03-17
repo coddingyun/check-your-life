@@ -1,6 +1,7 @@
 package com.rali.timelane
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +29,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,18 +57,27 @@ fun MakeBlockDialog(
     onDismiss: () -> Unit,
     onRemove: () -> Unit,
     onConfirm: (String, Color, String, String, ActivityType) -> Unit,
-    //makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     ) {
     val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value
     val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
     val colorPickerState = colorPickerViewModel.colorPickerState.value
     val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
     val mainState = mainViewModel.mainState.value
-    var activityName by remember { mutableStateOf("") }
-    var selectedColor by remember { mutableStateOf(Color.Blue) }
-    var (isValidated, setIsValidated) = remember { mutableStateOf(true) }
-    var (isDurationValidated, setIsDurationValidated) = remember { mutableStateOf(true) }
-    var (isActivityValidated, setIsActivityValidated) = remember { mutableStateOf(true) }
+    val validationState by makeBlockDialogViewModel.validationState.collectAsState(initial = null)
+
+    LaunchedEffect(validationState) {
+        if (validationState is ValidationResult.Valid) {
+            onConfirm(
+                blockDialogState?.title!!,
+                blockDialogState?.color!!,
+                formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
+                formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
+                blockDialogState.activityType!!
+            )
+            makeBlockDialogViewModel.initValidationState()
+        }
+    }
+
     val activities = remember(blockDialogState?.activityType) {
         if (blockDialogState?.activityType == ActivityType.PLAN) {
             activityViewModel.plannedActivities
@@ -75,10 +86,7 @@ fun MakeBlockDialog(
         }
     }.collectAsState()
 
-
     Dialog(onDismissRequest = {}) {
-        // TODO: 활동명, 컬러, 시작시간, 종료시간 받기
-
         if (timePickerStateForStartTime?.isShowTimePicker == true) {
             DayTimePicker(
                 onDismiss = {
@@ -273,26 +281,13 @@ fun MakeBlockDialog(
 
                 Spacer(modifier = Modifier.height(1.dp))
 
-                if (isValidated == false) {
+                // 에러 메시지 표시
+                if (validationState is ValidationResult.Invalid) {
                     Text(
-                        text = "입력하지 않은 값이 있는 지 확인해주세요.",
+                        text = (validationState as ValidationResult.Invalid).message,
                         fontSize = 12.sp,
-                        color = Color.Red,
+                        color = Color.Red
                     )
-                } else if (isDurationValidated == false) {
-                    Text(
-                        text = "시작 시간이 끝 시간보다 작아야 합니다.",
-                        fontSize = 12.sp,
-                        color = Color.Red,
-                    )
-                } else if (isActivityValidated == false) {
-                    Text(
-                        text = "해당 시간대에 이미 활동이 존재합니다.",
-                        fontSize = 12.sp,
-                        color = Color.Red,
-                    )
-                } else {
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 // 버튼 (취소 / 확인)
@@ -302,9 +297,6 @@ fun MakeBlockDialog(
                 ) {
                     OutlinedButton(
                         onClick = {
-                            setIsValidated(true)
-                            setIsDurationValidated(true)
-                            setIsActivityValidated(true)
                             onDismiss()
                       },
                         shape = RoundedCornerShape(8.dp)
@@ -314,56 +306,31 @@ fun MakeBlockDialog(
                     if (blockDialogState?.isShowUpdateBlockDialog == true) {
                         OutlinedButton(
                             onClick = {
-                                setIsValidated(true)
-                                setIsDurationValidated(true)
-                                setIsActivityValidated(true)
                                 onRemove()
                             },
                             shape = RoundedCornerShape(8.dp)) {
                             Text(text = "삭제")
                         }
                     }
+
+                    // 버튼 클릭 시 유효성 검사 실행
                     Button(
                         onClick = {
-                            if (blockDialogState?.title == "" || blockDialogState?.startHour == null || blockDialogState.endHour == null) {
-                                setIsValidated(false)
-                            }
-                            else if ((blockDialogState.startHour!!*60 + blockDialogState.startMinute!!) >= (blockDialogState.endHour!!*60 + blockDialogState.endHour!!)) {
-                                setIsValidated(true)
-                                setIsDurationValidated(false)
-                            }
-                            else if (
-                                activities.value.filter { it.date == mainState?.date!! }.any { activity ->
-                                    val activityStart = activity.startHour * 60 + activity.startMinute
-                                    val activityEnd = activity.endHour * 60 + activity.endMiniute
-
-                                    val newStart = blockDialogState.startHour!! * 60 + blockDialogState.startMinute!!
-                                    val newEnd = blockDialogState.endHour!! * 60 + blockDialogState.endMinute!!
-
-                                    // 시간이 겹치는 경우
-                                    (newStart < activityEnd && newEnd > activityStart)
-                                }
-                            ) {
-                                setIsValidated(true)
-                                setIsDurationValidated(true)
-                                setIsActivityValidated(false)
-                            }
-                            else {
-                                setIsValidated(true)
-                                setIsDurationValidated(true)
-                                setIsActivityValidated(true)
-                                onConfirm(
-                                    blockDialogState?.title!!,
-                                    blockDialogState?.color!!,
-                                    formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
-                                    formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
-                                    blockDialogState.activityType!!
-                                )
-                            }
+                            makeBlockDialogViewModel.validateBlock(
+                                blockDialogState?.title,
+                                blockDialogState?.startHour,
+                                blockDialogState?.startMinute,
+                                blockDialogState?.endHour,
+                                blockDialogState?.endMinute,
+                                activities.value.filter { it.date == mainState?.date!! },
+                                mainState?.date!!
+                            )
                         },
-                        shape = RoundedCornerShape(8.dp)) {
-                            Text(text = "확인")
-                        }
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(text = "확인")
+                    }
+
                 }
             }
         }

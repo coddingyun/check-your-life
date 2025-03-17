@@ -1,11 +1,14 @@
 package com.rali.timelane
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 // TODO: 맞게 바꾸어야 함
@@ -28,8 +31,28 @@ data class BlockDialogState(
 
 @HiltViewModel
 class MakeBlockDialogViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle?,
+    private val blockDialogValidator: BlockDialogValidator,
 ) : ViewModel() {
+    private val _validationState = MutableStateFlow<ValidationResult?>(null)
+    val validationState: StateFlow<ValidationResult?> = _validationState
+
+    fun validateBlock(
+        title: String?,
+        startHour: Int?,
+        startMinute: Int?,
+        endHour: Int?,
+        endMinute: Int?,
+        activities: List<Activity>,
+        currentDate: Long
+    ) {
+        Log.i("validation2", "validateBlock")
+        _validationState.value = blockDialogValidator.validate(title, startHour, startMinute, endHour, endMinute, activities, currentDate)
+    }
+
+    fun initValidationState() {
+        _validationState.value = null
+    }
+
     val blockDialogState: MutableState<BlockDialogState?>
         = mutableStateOf(null)
 
