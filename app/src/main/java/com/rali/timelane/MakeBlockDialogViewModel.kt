@@ -37,6 +37,7 @@ class MakeBlockDialogViewModel @Inject constructor(
     val validationState: StateFlow<ValidationResult?> = _validationState
 
     fun validateBlock(
+        id: Long?,
         title: String?,
         startHour: Int?,
         startMinute: Int?,
@@ -46,7 +47,7 @@ class MakeBlockDialogViewModel @Inject constructor(
         currentDate: Long
     ) {
         Log.i("validation2", "validateBlock")
-        _validationState.value = blockDialogValidator.validate(title, startHour, startMinute, endHour, endMinute, activities, currentDate)
+        _validationState.value = blockDialogValidator.validate(id, title, startHour, startMinute, endHour, endMinute, activities, currentDate)
     }
 
     fun initValidationState() {

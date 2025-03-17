@@ -2,6 +2,7 @@ package com.rali.timelane
 
 class BlockDialogValidator {
     fun validate(
+        id: Long?,
         title: String?,
         startHour: Int?,
         startMinute: Int?,
@@ -22,7 +23,7 @@ class BlockDialogValidator {
         }
 
         val isOverlapping = activities
-            .filter { it.date == currentDate }
+            .filter { activity -> activity.date == currentDate && activity.id != id}
             .any { activity ->
                 val activityStart = activity.startHour * 60 + activity.startMinute
                 val activityEnd = activity.endHour * 60 + activity.endMiniute

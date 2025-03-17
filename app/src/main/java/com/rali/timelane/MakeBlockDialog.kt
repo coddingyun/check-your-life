@@ -317,6 +317,7 @@ fun MakeBlockDialog(
                     Button(
                         onClick = {
                             makeBlockDialogViewModel.validateBlock(
+                                blockDialogState?.id,
                                 blockDialogState?.title,
                                 blockDialogState?.startHour,
                                 blockDialogState?.startMinute,
