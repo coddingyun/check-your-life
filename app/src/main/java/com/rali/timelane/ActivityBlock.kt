@@ -1,4 +1,4 @@
-package com.rali.timelane
+package com.rali.checkyourlife
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,7 +34,7 @@ fun ActivityBlock(
                     if (activity.type == "PLAN") ActivityType.PLAN else ActivityType.REALITY
                 )
             } // 클릭 시 다이얼로그 표시
-            .padding(horizontal = 4.dp, vertical = 2.dp)
+            .padding(horizontal = 4.dp)
             .background(activity.color, shape = MaterialTheme.shapes.small)
             .zIndex(1f)
     ) {
