@@ -1,4 +1,4 @@
-package com.rali.timelane
+package com.rali.checkyourlife
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

@@ -1,4 +1,4 @@
-package com.rali.timelane
+package com.rali.checkyourlife
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

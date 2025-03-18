@@ -1,4 +1,4 @@
-package com.rali.timelane.ui.theme
+package com.rali.checkyourlife.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

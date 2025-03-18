@@ -13,15 +13,15 @@ val properties = Properties().apply {
 }
 
 android {
-    namespace = "com.rali.timelane"
+    namespace = "com.rali.checkyourlife"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.rali.timelane"
+        applicationId = "com.rali.checkyourlife"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

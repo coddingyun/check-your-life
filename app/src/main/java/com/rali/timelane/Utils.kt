@@ -1,4 +1,4 @@
-package com.rali.timelane
+package com.rali.checkyourlife
 
 fun formatHHmm(hour: Int, minute: Int): String {
     val time = String.format("%02d:%02d", hour, minute)

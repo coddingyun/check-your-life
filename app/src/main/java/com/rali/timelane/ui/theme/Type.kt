@@ -1,4 +1,4 @@
-package com.rali.timelane.ui.theme
+package com.rali.checkyourlife.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
