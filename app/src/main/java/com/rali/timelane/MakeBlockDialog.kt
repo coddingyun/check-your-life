@@ -74,7 +74,6 @@ fun MakeBlockDialog(
                 formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
                 blockDialogState.activityType!!
             )
-            makeBlockDialogViewModel.initValidationState()
         }
     }
 

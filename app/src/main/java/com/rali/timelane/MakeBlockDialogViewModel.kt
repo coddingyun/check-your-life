@@ -70,6 +70,7 @@ class MakeBlockDialogViewModel @Inject constructor(
                     endHour = null,
                     endMinute = null,
                 )
+                initValidationState()
             },
             onDismiss = {
                 blockDialogState.value = blockDialogState.value?.copy(
@@ -82,6 +83,7 @@ class MakeBlockDialogViewModel @Inject constructor(
                     endHour = null,
                     endMinute = null,
                 )
+                initValidationState()
             }
         )
     }
