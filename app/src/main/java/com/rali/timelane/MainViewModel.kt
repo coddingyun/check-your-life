@@ -32,6 +32,10 @@ class MainViewModel @Inject constructor(
         )
     }
 
+    fun setDate(date: Long) {
+        mainState.value = mainState.value?.copy(date = date)
+    }
+
     fun formateDate(): String {
         val currentDateTime =
             Instant.ofEpochMilli(mainState.value?.date!!).atZone(ZoneId.systemDefault()).toLocalDateTime()
