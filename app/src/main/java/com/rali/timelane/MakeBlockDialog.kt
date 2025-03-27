@@ -1,7 +1,6 @@
 package com.rali.checkyourlife
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -87,6 +88,8 @@ fun MakeBlockDialog(
         }
     }.collectAsState()
 
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+
     Dialog(onDismissRequest = {
         onDismiss()
     }) {
@@ -122,7 +125,31 @@ fun MakeBlockDialog(
                 },
                 onConfirm = { color ->
                     colorPickerState.onConfirm(color)
-                    //makeBlockDialogViewModel.setColor(color)
+                }
+            )
+        }
+
+        if (showDeleteConfirmation) {
+            AlertDialog(
+                onDismissRequest = { showDeleteConfirmation = false },
+                title = { Text("활동 삭제") },
+                text = { Text("정말 이 활동을 삭제하시겠습니까?") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDeleteConfirmation = false
+                            onRemove()
+                        }
+                    ) {
+                        Text("삭제")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { showDeleteConfirmation = false }
+                    ) {
+                        Text("취소")
+                    }
                 }
             )
         }
@@ -318,7 +345,7 @@ fun MakeBlockDialog(
                     if (blockDialogState?.isShowUpdateBlockDialog == true) {
                         OutlinedButton(
                             onClick = {
-                                onRemove()
+                                showDeleteConfirmation = true
                             },
                             shape = RoundedCornerShape(8.dp)) {
                             Text(text = "삭제")
