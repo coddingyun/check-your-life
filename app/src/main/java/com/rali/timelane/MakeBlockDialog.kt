@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -85,7 +87,9 @@ fun MakeBlockDialog(
         }
     }.collectAsState()
 
-    Dialog(onDismissRequest = {}) {
+    Dialog(onDismissRequest = {
+        onDismiss()
+    }) {
         if (timePickerStateForStartTime?.isShowTimePicker == true) {
             DayTimePicker(
                 onDismiss = {
@@ -138,12 +142,29 @@ fun MakeBlockDialog(
                     .padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text = "활동 추가",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    IconButton(
+                        onClick = { onDismiss() },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(x = 8.dp, y = (-8).dp)  // 오른쪽 위로 더 이동
+                            .size(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close Dialog"
+                        )
+                    }
+
+                    Text(
+                        text = "활동 추가",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 20.dp)
+                    )
+                }
 
                 // 활동명 입력
                 OutlinedTextField(
@@ -294,14 +315,6 @@ fun MakeBlockDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    OutlinedButton(
-                        onClick = {
-                            onDismiss()
-                      },
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(text = "취소")
-                    }
                     if (blockDialogState?.isShowUpdateBlockDialog == true) {
                         OutlinedButton(
                             onClick = {
