@@ -393,7 +393,7 @@ fun MakeBlockDialog(
                         )
                     ) {
                         Text(
-                            text = "Reality에 동일한 활동 추가하기", 
+                            text = "동일 시간에 완료했어요!",
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
