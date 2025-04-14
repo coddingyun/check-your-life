@@ -204,7 +204,7 @@ fun MakeBlockDialog(
                     }
 
                     Text(
-                        text = "활동 추가",
+                        text = if (blockDialogState!!.isShowMakeBlockDialog) "활동 추가" else "활동 수정",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
