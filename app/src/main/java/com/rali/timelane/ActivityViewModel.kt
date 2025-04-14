@@ -14,8 +14,8 @@ import javax.inject.Inject
 class ActivityViewModel @Inject constructor(
     private val repository: ActivityRepository
 ) : ViewModel() {
-    private val _planndedActivities = MutableStateFlow<List<Activity>>(emptyList())
-    val plannedActivities = _planndedActivities.asStateFlow()
+    private val _plannedActivities = MutableStateFlow<List<Activity>>(emptyList())
+    val plannedActivities = _plannedActivities.asStateFlow()
 
     private val _actualActivities = MutableStateFlow<List<Activity>>(emptyList())
     val actualActivities = _actualActivities.asStateFlow()
@@ -27,7 +27,7 @@ class ActivityViewModel @Inject constructor(
     private fun loadActivities() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getPlannedActivities().distinctUntilChanged().collect { plannedActivity ->
-                _planndedActivities.value = plannedActivity
+                _plannedActivities.value = plannedActivity
             }
         }
         viewModelScope.launch(Dispatchers.IO) {
