@@ -131,6 +131,7 @@ class MakeBlockDialogViewModel @Inject constructor(
             endHour = activity.endHour,
             endMinute = activity.endMiniute,
             color = activity.color,
+            isShowUpdateBlockDialog = true, // updateBlockDialog 열기
             activityType = if (activity.type == "PLAN") ActivityType.PLAN else ActivityType.REALITY
         )
     }

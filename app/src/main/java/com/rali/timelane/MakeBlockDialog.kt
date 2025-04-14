@@ -1,7 +1,6 @@
 package com.rali.checkyourlife
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -102,21 +101,10 @@ fun MakeBlockDialog(
         }
     }
 
-//    val activities = remember(blockDialogState?.activityType) {
-//        if (blockDialogState?.activityType == ActivityType.PLAN) {
-//            activityViewModel.plannedActivities
-//        } else {
-//            activityViewModel.actualActivities
-//        }
-//    }.collectAsState()
-
     val activities = when (blockDialogState?.activityType) {
         ActivityType.PLAN -> activityViewModel.plannedActivities.collectAsState(initial = emptyList())
         else -> activityViewModel.actualActivities.collectAsState(initial = emptyList())
     }
-
-
-    Log.i("activities: ", activities.value.toString())
 
     val plannedActivities = activityViewModel.plannedActivities.collectAsState()
 

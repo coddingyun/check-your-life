@@ -82,6 +82,41 @@ fun DailyPlannerApp(
                 dialogState.onDismiss()
             },
         )
+    } else if (dialogState?.isShowUpdateBlockDialog == true) {
+        MakeBlockDialog(
+            onConfirm = { title, color, startTime, endTime, activityType ->
+                activityViewModel.updateActivity(
+                    Activity(
+                        id = dialogState.id!!,
+                        title = title,
+                        date = mainState?.date!!,
+                        colorInt = color.toArgb(),
+                        startTime = startTime,
+                        endTime = endTime,
+                        type = activityType.name,
+                    )
+                )
+                dialogState.onConfirm(title, color, startTime, endTime, activityType)
+            },
+            onRemove = {
+                activityViewModel.removeActivity(
+                    Activity(
+                        id = dialogState.id!!,
+                        title = dialogState.title,
+                        date = mainState?.date!!,
+                        colorInt = dialogState.color.toArgb(),
+                        startTime = formatHHmm(dialogState.startHour!!, dialogState.startMinute!!),
+                        endTime = formatHHmm(dialogState.endHour!!, dialogState.endMinute!!),
+                        type = dialogState.activityType!!.name,
+                    )
+                )
+                makeBlockDialogViewModel.closeUpdateBlockDialog()
+            },
+            onDismiss = {
+                dialogState.onDismiss()
+                makeBlockDialogViewModel.closeUpdateBlockDialog()
+            },
+        )
     }
 
     Scaffold(
