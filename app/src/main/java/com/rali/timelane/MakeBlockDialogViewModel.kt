@@ -44,48 +44,62 @@ class MakeBlockDialogViewModel @Inject constructor(
         endHour: Int?,
         endMinute: Int?,
         activities: List<Activity>,
-        currentDate: Long
+        currentDate: Long,
+        isCopy: Boolean,
     ) {
-        Log.i("validation2", "validateBlock")
-        _validationState.value = blockDialogValidator.validate(id, title, startHour, startMinute, endHour, endMinute, activities, currentDate)
+        Log.i("activities", "$startHour, $startMinute, $endHour, $endMinute, $activities")
+        _validationState.value = blockDialogValidator.validate(id, title, startHour, startMinute, endHour, endMinute, activities, currentDate, isCopy)
     }
 
     fun initValidationState() {
         _validationState.value = null
     }
 
-    val blockDialogState: MutableState<BlockDialogState?>
-        = mutableStateOf(null)
-
-    init {
+    fun initBlockDialogState() {
         blockDialogState.value = BlockDialogState(
+            id = null,
+            title = "",
+            color = Color(0xFFFF0000),
+            startHour = null,
+            startMinute = null,
+            endHour = null,
+            endMinute = null,
             onConfirm = { title, color, startTime, endTime, activityType ->
                 blockDialogState.value = blockDialogState.value?.copy(
-                    isShowMakeBlockDialog = false,
-                    isShowUpdateBlockDialog = false,
+                    id = null,
                     title = "",
                     color = Color(0xFFFF0000),
                     startHour = null,
                     startMinute = null,
                     endHour = null,
                     endMinute = null,
+                    isShowMakeBlockDialog = false,
+                    isShowUpdateBlockDialog = false,
                 )
                 initValidationState()
             },
             onDismiss = {
                 blockDialogState.value = blockDialogState.value?.copy(
-                    isShowMakeBlockDialog = false,
-                    isShowUpdateBlockDialog = false,
+                    id = null,
                     title = "",
                     color = Color(0xFFFF0000),
                     startHour = null,
                     startMinute = null,
                     endHour = null,
                     endMinute = null,
+                    isShowMakeBlockDialog = false,
+                    isShowUpdateBlockDialog = false,
                 )
                 initValidationState()
             }
         )
+    }
+
+    val blockDialogState: MutableState<BlockDialogState?>
+        = mutableStateOf(null)
+
+    init {
+        initBlockDialogState()
     }
 
     fun setStartTime(hour: Int, minute: Int) {
@@ -146,6 +160,14 @@ class MakeBlockDialogViewModel @Inject constructor(
     fun closeUpdateBlockDialog() {
         blockDialogState.value =
             blockDialogState.value?.copy(
+                id = null,
+                title = "",
+                startHour = null,
+                startMinute = null,
+                endHour = null,
+                endMinute = null,
+                color = Color(0xFFFF0000),
+                activityType = null,
                 isShowUpdateBlockDialog = false,
             )
     }

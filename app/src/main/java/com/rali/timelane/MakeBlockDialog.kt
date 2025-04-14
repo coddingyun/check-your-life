@@ -1,6 +1,7 @@
 package com.rali.checkyourlife
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -45,7 +47,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -60,7 +64,7 @@ fun MakeBlockDialog(
     onDismiss: () -> Unit,
     onRemove: () -> Unit,
     onConfirm: (String, Color, String, String, ActivityType) -> Unit,
-    ) {
+) {
     val timePickerStateForStartTime = dayTimePickerViewModelForStartTime.timePickerState.value
     val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
     val colorPickerState = colorPickerViewModel.colorPickerState.value
@@ -68,25 +72,53 @@ fun MakeBlockDialog(
     val mainState = mainViewModel.mainState.value
     val validationState by makeBlockDialogViewModel.validationState.collectAsState(initial = null)
 
+    LaunchedEffect(Unit) {
+        makeBlockDialogViewModel.initValidationState()
+    }
+
     LaunchedEffect(validationState) {
         if (validationState is ValidationResult.Valid) {
-            onConfirm(
-                blockDialogState?.title!!,
-                blockDialogState?.color!!,
-                formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
-                formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
-                blockDialogState.activityType!!
-            )
+            if ((validationState as ValidationResult.Valid).isCopy) {
+                activityViewModel.addActivity(
+                    Activity(
+                        title = blockDialogState!!.title,
+                        date = mainState?.date!!,
+                        colorInt = blockDialogState.color.toArgb(),
+                        startTime = formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
+                        endTime = formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
+                        type = ActivityType.REALITY.name,
+                    )
+                )
+                onDismiss()
+            } else {
+                onConfirm(
+                    blockDialogState?.title!!,
+                    blockDialogState?.color!!,
+                    formatHHmm(blockDialogState?.startHour!!, blockDialogState.startMinute!!),
+                    formatHHmm(blockDialogState?.endHour!!, blockDialogState.endMinute!!),
+                    blockDialogState.activityType!!
+                )
+            }
         }
     }
 
-    val activities = remember(blockDialogState?.activityType) {
-        if (blockDialogState?.activityType == ActivityType.PLAN) {
-            activityViewModel.plannedActivities
-        } else {
-            activityViewModel.actualActivities
-        }
-    }.collectAsState()
+//    val activities = remember(blockDialogState?.activityType) {
+//        if (blockDialogState?.activityType == ActivityType.PLAN) {
+//            activityViewModel.plannedActivities
+//        } else {
+//            activityViewModel.actualActivities
+//        }
+//    }.collectAsState()
+
+    val activities = when (blockDialogState?.activityType) {
+        ActivityType.PLAN -> activityViewModel.plannedActivities.collectAsState(initial = emptyList())
+        else -> activityViewModel.actualActivities.collectAsState(initial = emptyList())
+    }
+
+
+    Log.i("activities: ", activities.value.toString())
+
+    val plannedActivities = activityViewModel.plannedActivities.collectAsState()
 
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
@@ -337,7 +369,39 @@ fun MakeBlockDialog(
                     )
                 }
 
-                // 버튼 (취소 / 확인)
+                if (blockDialogState?.isShowUpdateBlockDialog == true && 
+                    blockDialogState.activityType == ActivityType.PLAN) {
+                    Button(
+                        onClick = {
+                            makeBlockDialogViewModel.validateBlock(
+                                blockDialogState?.id,
+                                blockDialogState?.title,
+                                blockDialogState?.startHour,
+                                blockDialogState?.startMinute,
+                                blockDialogState?.endHour,
+                                blockDialogState?.endMinute,
+                                plannedActivities.value.filter { it.date == mainState?.date!! },
+                                mainState?.date!!,
+                                isCopy = true,
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+                    ) {
+                        Text(
+                            text = "Reality에 동일한 활동 추가하기", 
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -363,7 +427,8 @@ fun MakeBlockDialog(
                                 blockDialogState?.endHour,
                                 blockDialogState?.endMinute,
                                 activities.value.filter { it.date == mainState?.date!! },
-                                mainState?.date!!
+                                mainState?.date!!,
+                                isCopy = false,
                             )
                         },
                         shape = RoundedCornerShape(8.dp)

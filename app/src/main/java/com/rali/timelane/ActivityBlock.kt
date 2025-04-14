@@ -1,5 +1,7 @@
 package com.rali.checkyourlife
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ActivityBlock(
     activity: Activity,
@@ -70,6 +73,7 @@ fun ActivityBlock(
             },
             onDismiss = {
                 dialogState.onDismiss()
+                makeBlockDialogViewModel.closeUpdateBlockDialog()
             },
         )
     }
