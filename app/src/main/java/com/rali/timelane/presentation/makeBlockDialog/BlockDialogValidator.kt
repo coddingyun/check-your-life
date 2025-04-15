@@ -1,7 +1,5 @@
 package com.rali.checkyourlife
 
-import android.util.Log
-
 class BlockDialogValidator {
     fun validate(
         id: Long?,

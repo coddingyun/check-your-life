@@ -1,9 +1,11 @@
-package com.rali.checkyourlife
+package com.rali.timelane.domain.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.rali.checkyourlife.Activity
+import com.rali.timelane.domain.dao.ActivityDao
 
 @Database(entities = [Activity::class], version = 2, exportSchema = false)
 abstract class ActivityDatabase : RoomDatabase() {

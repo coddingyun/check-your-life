@@ -1,7 +1,9 @@
-package com.rali.checkyourlife
+package com.rali.timelane.presentation.activityBlock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rali.checkyourlife.Activity
+import com.rali.timelane.domain.repository.ActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

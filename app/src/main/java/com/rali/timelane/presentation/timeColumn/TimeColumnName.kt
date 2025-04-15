@@ -1,4 +1,4 @@
-package com.rali.checkyourlife
+package com.rali.timelane.presentation.timeColumn
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rali.timelane.presentation.activityBlock.ActivityType
+import com.rali.checkyourlife.MakeBlockDialogViewModel
 
 @Composable
 fun TimeColumnName(name: String,

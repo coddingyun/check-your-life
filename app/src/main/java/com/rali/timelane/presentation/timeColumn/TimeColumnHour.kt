@@ -1,4 +1,4 @@
-package com.rali.checkyourlife
+package com.rali.timelane.presentation.timeColumn
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row

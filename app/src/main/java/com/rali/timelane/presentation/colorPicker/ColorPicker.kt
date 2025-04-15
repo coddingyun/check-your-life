@@ -1,4 +1,4 @@
-package com.rali.checkyourlife
+package com.rali.timelane.presentation.colorPicker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

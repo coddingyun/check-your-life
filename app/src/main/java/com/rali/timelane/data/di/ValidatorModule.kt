@@ -1,5 +1,6 @@
-package com.rali.checkyourlife
+package com.rali.timelane.data.di
 
+import com.rali.checkyourlife.BlockDialogValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

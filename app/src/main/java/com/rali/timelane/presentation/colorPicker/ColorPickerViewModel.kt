@@ -1,4 +1,4 @@
-package com.rali.checkyourlife
+package com.rali.timelane.presentation.colorPicker
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

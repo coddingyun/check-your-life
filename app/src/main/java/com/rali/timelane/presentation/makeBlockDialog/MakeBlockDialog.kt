@@ -50,6 +50,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rali.timelane.presentation.activityBlock.ActivityViewModel
+import com.rali.timelane.presentation.activityBlock.ActivityType
+import com.rali.timelane.presentation.colorPicker.ColorPickerDialog
+import com.rali.timelane.presentation.colorPicker.ColorPickerViewModel
+import com.rali.timelane.presentation.dayTimePicker.DayTimePickerViewModelForEndTime
+import com.rali.timelane.presentation.dayTimePicker.DayTimePickerViewModelForStartTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

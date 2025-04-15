@@ -31,6 +31,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.ads.MobileAds
+import com.rali.timelane.presentation.activityBlock.ActivityViewModel
+import com.rali.timelane.presentation.timeColumn.TimeColumn
+import com.rali.timelane.presentation.timeColumn.TimeColumnHour
+import com.rali.timelane.presentation.timeColumn.TimeColumnName
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

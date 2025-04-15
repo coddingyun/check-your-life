@@ -1,4 +1,4 @@
-package com.rali.checkyourlife
+package com.rali.timelane.presentation.dayTimePicker
 
 data class DayTimePickerState(
     var selectedHour: Int? = null,

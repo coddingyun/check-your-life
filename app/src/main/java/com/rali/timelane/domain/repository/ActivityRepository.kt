@@ -1,5 +1,7 @@
-package com.rali.checkyourlife
+package com.rali.timelane.domain.repository
 
+import com.rali.checkyourlife.Activity
+import com.rali.timelane.domain.dao.ActivityDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate

@@ -1,7 +1,10 @@
-package com.rali.checkyourlife
+package com.rali.timelane.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.rali.timelane.domain.dao.ActivityDao
+import com.rali.timelane.domain.database.ActivityDatabase
+import com.rali.timelane.domain.repository.ActivityRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
