@@ -65,7 +65,7 @@ fun MakeBlockDialog(
     colorPickerViewModel: ColorPickerViewModel = hiltViewModel(),
     makeBlockDialogViewModel: MakeBlockDialogViewModel = hiltViewModel(),
     activityViewModel: ActivityViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
     onRemove: () -> Unit,
     onConfirm: (String, Color, String, String, ActivityType) -> Unit,
@@ -74,7 +74,7 @@ fun MakeBlockDialog(
     val timePickerStateForEndTime = dayTimePickerViewModelForEndTime.timePickerState.value
     val colorPickerState = colorPickerViewModel.colorPickerState.value
     val blockDialogState = makeBlockDialogViewModel.blockDialogState.value
-    val mainState = mainViewModel.mainState.value
+    val mainState = homeViewModel.homeState.value
     val validationState by makeBlockDialogViewModel.validationState.collectAsState(initial = null)
 
     LaunchedEffect(Unit) {

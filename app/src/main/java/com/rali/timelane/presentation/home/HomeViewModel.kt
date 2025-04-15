@@ -14,51 +14,51 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-data class MainState(
+data class HomeState(
     var date: Long = 0,
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle?,
 ): ViewModel() {
-    val mainState: MutableState<MainState?>
+    val homeState: MutableState<HomeState?>
         = mutableStateOf(null)
 
     init {
-        mainState.value = MainState(
+        homeState.value = HomeState(
             date = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         )
     }
 
     fun setDate(date: Long) {
-        mainState.value = mainState.value?.copy(date = date)
+        homeState.value = homeState.value?.copy(date = date)
     }
 
     fun formateDate(): String {
         val currentDateTime =
-            Instant.ofEpochMilli(mainState.value?.date!!).atZone(ZoneId.systemDefault()).toLocalDateTime()
+            Instant.ofEpochMilli(homeState.value?.date!!).atZone(ZoneId.systemDefault()).toLocalDateTime()
         return DateTimeFormatter.ofPattern("yyyy년 MM월 dd일").format(currentDateTime)
     }
 
     fun minusDay1() {
-        val currentDate = mainState.value?.date ?: return
+        val currentDate = homeState.value?.date ?: return
 
         val newDate = Instant.ofEpochMilli(currentDate)
             .minus(1, ChronoUnit.DAYS) // ✅ 정확하게 하루만 감소
             .toEpochMilli()
 
-        mainState.value = mainState.value?.copy(date = newDate)
+        homeState.value = homeState.value?.copy(date = newDate)
     }
 
     fun plusDay1() {
-        val currentDate = mainState.value?.date ?: return
+        val currentDate = homeState.value?.date ?: return
 
         val newDate = Instant.ofEpochMilli(currentDate)
             .plus(1, ChronoUnit.DAYS) // ✅ 정확하게 하루만 증가
             .toEpochMilli()
 
-        mainState.value = mainState.value?.copy(date = newDate)
+        homeState.value = homeState.value?.copy(date = newDate)
     }
 }

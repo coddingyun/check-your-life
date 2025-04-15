@@ -31,16 +31,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckYourLifeAppBar(
-    mainViewModel: MainViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
-    val mainState = mainViewModel.mainState.value
+    val homeState = homeViewModel.homeState.value
 
     TopAppBar(
         title = {
         },
         actions = {
-            IconButton(onClick = { mainViewModel.minusDay1() }) {
+            IconButton(onClick = { homeViewModel.minusDay1() }) {
                 Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Previous Day")
             }
 
@@ -52,12 +52,12 @@ fun CheckYourLifeAppBar(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = mainViewModel.formateDate(),
+                    text = homeViewModel.formateDate(),
                     fontWeight = FontWeight.Medium
                 )
             }
 
-            IconButton(onClick = { mainViewModel.plusDay1() }) {
+            IconButton(onClick = { homeViewModel.plusDay1() }) {
                 Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next Day")
             }
         }
@@ -65,7 +65,7 @@ fun CheckYourLifeAppBar(
     
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = mainState?.date
+            initialSelectedDateMillis = homeState?.date
         )
         
         DatePickerDialog(
@@ -74,7 +74,7 @@ fun CheckYourLifeAppBar(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            mainViewModel.setDate(millis)
+                            homeViewModel.setDate(millis)
                         }
                         showDatePicker = false
                     }
