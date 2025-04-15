@@ -112,7 +112,7 @@ fun MakeBlockDialog(
         else -> activityViewModel.actualActivities.collectAsState(initial = emptyList())
     }
 
-    val plannedActivities = activityViewModel.plannedActivities.collectAsState()
+    val actualActivities = activityViewModel.actualActivities.collectAsState()
 
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
@@ -374,7 +374,7 @@ fun MakeBlockDialog(
                                 blockDialogState?.startMinute,
                                 blockDialogState?.endHour,
                                 blockDialogState?.endMinute,
-                                plannedActivities.value.filter { it.date == mainState?.date!! },
+                                actualActivities.value.filter { it.date == mainState?.date!! },
                                 mainState?.date!!,
                                 isCopy = true,
                             )
