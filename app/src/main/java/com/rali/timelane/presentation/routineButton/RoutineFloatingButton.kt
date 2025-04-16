@@ -19,6 +19,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,12 +29,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.rali.timelane.presentation.activityBlock.ActivityViewModel
 import com.rali.timelane.presentation.common.CustomAlertDialog
 
 @Composable
-fun RoutineFloatingButton() {
+fun RoutineFloatingButton(
+    routineViewModel: RoutineViewModel = hiltViewModel(),
+    activityViewModel: ActivityViewModel = hiltViewModel(),
+) {
     var isExpanded by remember { mutableStateOf(false) }
     var showConfirmDialog by remember { mutableStateOf(false) }
+    val plannedActivities = activityViewModel.plannedActivities.collectAsState()
 
     Column(horizontalAlignment = Alignment.End) {
         if (isExpanded) {
@@ -77,6 +84,11 @@ fun RoutineFloatingButton() {
             onConfirm = {
                 showConfirmDialog = false
                 isExpanded = false
+                routineViewModel.addRoutine(
+                    Routine(
+                        activities = plannedActivities.value
+                    )
+                )
             },
             onDismiss = {
                 showConfirmDialog = false

@@ -2,6 +2,9 @@ package com.rali.timelane.domain.repository
 
 import com.rali.timelane.domain.dao.RoutineDao
 import com.rali.timelane.presentation.routineButton.Routine
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class RoutineRepository @Inject constructor(
@@ -11,8 +14,8 @@ class RoutineRepository @Inject constructor(
         routineDao.insertRoutine(routine)
     }
 
-    suspend fun getAllRoutines(): List<Routine> {
-        return routineDao.getAllRoutines()
+    suspend fun getAllRoutines(): Flow<List<Routine>> {
+        return routineDao.getAllRoutines().flowOn(Dispatchers.IO)
     }
 
     suspend fun deleteRoutine(routine: Routine) {

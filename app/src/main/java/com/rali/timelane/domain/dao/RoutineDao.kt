@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.rali.checkyourlife.Activity
 import com.rali.timelane.presentation.routineButton.Routine
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RoutineDao {
@@ -13,7 +14,7 @@ interface RoutineDao {
     suspend fun insertRoutine(routine: Routine)
 
     @Query("SELECT * FROM routine")
-    suspend fun getAllRoutines(): List<Routine>
+    fun getAllRoutines(): Flow<List<Routine>>
 
     @Delete
     suspend fun deleteRoutine(routine: Routine)
