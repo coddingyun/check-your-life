@@ -54,6 +54,7 @@ import com.rali.timelane.presentation.activityBlock.ActivityViewModel
 import com.rali.timelane.presentation.activityBlock.ActivityType
 import com.rali.timelane.presentation.colorPicker.ColorPickerDialog
 import com.rali.timelane.presentation.colorPicker.ColorPickerViewModel
+import com.rali.timelane.presentation.common.CustomAlertDialog
 import com.rali.timelane.presentation.dayTimePicker.DayTimePickerViewModelForEndTime
 import com.rali.timelane.presentation.dayTimePicker.DayTimePickerViewModelForStartTime
 
@@ -156,26 +157,15 @@ fun MakeBlockDialog(
         }
 
         if (showDeleteConfirmation) {
-            AlertDialog(
-                onDismissRequest = { showDeleteConfirmation = false },
-                title = { Text("활동 삭제") },
-                text = { Text("정말 이 활동을 삭제하시겠습니까?") },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            showDeleteConfirmation = false
-                            onRemove()
-                        }
-                    ) {
-                        Text("삭제")
-                    }
+            CustomAlertDialog(
+                dialogTitle = "활동 삭제",
+                dialogText = "정말 이 활동을 삭제하시겠습니까?",
+                onConfirm = {
+                    showDeleteConfirmation = false
+                    onRemove()
                 },
-                dismissButton = {
-                    TextButton(
-                        onClick = { showDeleteConfirmation = false }
-                    ) {
-                        Text("취소")
-                    }
+                onDismiss = {
+                    showDeleteConfirmation = false
                 }
             )
         }

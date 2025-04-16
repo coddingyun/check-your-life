@@ -15,11 +15,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.rali.timelane.presentation.common.CustomAlertDialog
 
 @Composable
 fun RoutineFloatingButton() {
@@ -72,29 +71,16 @@ fun RoutineFloatingButton() {
     }
 
     if (showConfirmDialog) {
-        AlertDialog(
-            onDismissRequest = { showConfirmDialog = false },
-            title = { Text("확인") },
-            text = { Text("오늘을 루틴으로 등록하시겠습니까?") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showConfirmDialog = false
-                        isExpanded = false
-                    }
-                ) {
-                    Text("확인")
-                }
+        CustomAlertDialog(
+            dialogTitle = "루틴 등록",
+            dialogText = "오늘을 루틴으로 등록하시겠습니까?",
+            onConfirm = {
+                showConfirmDialog = false
+                isExpanded = false
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showConfirmDialog = false
-                        isExpanded = false
-                    }
-                ) {
-                    Text("취소")
-                }
+            onDismiss = {
+                showConfirmDialog = false
+                isExpanded = false
             }
         )
     }
