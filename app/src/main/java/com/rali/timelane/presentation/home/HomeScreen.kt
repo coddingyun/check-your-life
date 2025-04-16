@@ -34,6 +34,7 @@ import com.rali.checkyourlife.MakeBlockDialog
 import com.rali.checkyourlife.MakeBlockDialogViewModel
 import com.rali.checkyourlife.formatHHmm
 import com.rali.timelane.presentation.activityBlock.ActivityViewModel
+import com.rali.timelane.presentation.routineButton.RoutineFloatingButton
 import com.rali.timelane.presentation.timeColumn.TimeColumn
 import com.rali.timelane.presentation.timeColumn.TimeColumnHour
 import com.rali.timelane.presentation.timeColumn.TimeColumnName
@@ -114,6 +115,9 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()) // ✅ 네비게이션 바 높이만큼 패딩 추가
             )
+        },
+        floatingActionButton = {
+            RoutineFloatingButton()
         }
     ) { paddingValues ->
         Column(
