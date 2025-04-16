@@ -4,23 +4,28 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.rali.checkyourlife.Activity
 import com.rali.timelane.domain.dao.ActivityDao
+import com.rali.timelane.domain.dao.RoutineDao
+import com.rali.timelane.presentation.routineButton.Routine
 
-@Database(entities = [Activity::class], version = 2, exportSchema = false)
-abstract class ActivityDatabase : RoomDatabase() {
+@Database(entities = [Activity::class, Routine::class], version = 3, exportSchema = false)
+@TypeConverters(Converters::class)
+abstract class UserDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
+    abstract fun routineDao(): RoutineDao
 
     companion object {
         @Volatile
-        private var INSTANCE: ActivityDatabase? = null
+        private var INSTANCE: UserDatabase? = null
 
-        fun getDatabase(context: Context): ActivityDatabase {
+        fun getDatabase(context: Context): UserDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    ActivityDatabase::class.java,
-                    "activity_database"
+                    UserDatabase::class.java,
+                    "user_database"
                 )
                 .fallbackToDestructiveMigration()
                 .build()
