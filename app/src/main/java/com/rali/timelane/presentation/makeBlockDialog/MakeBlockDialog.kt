@@ -55,7 +55,10 @@ import com.rali.timelane.presentation.activityBlock.ActivityType
 import com.rali.timelane.presentation.colorPicker.ColorPickerDialog
 import com.rali.timelane.presentation.colorPicker.ColorPickerViewModel
 import com.rali.timelane.presentation.common.CustomAlertDialog
+import com.rali.timelane.presentation.common.DialogButton
 import com.rali.timelane.presentation.common.DialogCard
+import com.rali.timelane.presentation.common.DialogOutlinedButton
+import com.rali.timelane.presentation.common.DialogTextField
 import com.rali.timelane.presentation.dayTimePicker.DayTimePickerViewModelForEndTime
 import com.rali.timelane.presentation.dayTimePicker.DayTimePickerViewModelForStartTime
 
@@ -176,15 +179,12 @@ fun MakeBlockDialog(
             onDismiss = { onDismiss() },
         ) {
             // 활동명 입력
-            OutlinedTextField(
+            DialogTextField(
                 value = blockDialogState?.title ?: "",
                 onValueChange = { newTitle ->
                     makeBlockDialogViewModel.updateTitle(newTitle)
                 },
-                label = { Text("활동명") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp)
+                label = "활동명",
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -357,17 +357,17 @@ fun MakeBlockDialog(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 if (blockDialogState?.isShowUpdateBlockDialog == true) {
-                    OutlinedButton(
+                    DialogOutlinedButton(
+                        text = "삭제",
                         onClick = {
                             showDeleteConfirmation = true
-                        },
-                        shape = RoundedCornerShape(8.dp)) {
-                        Text(text = "삭제")
-                    }
+                        }
+                    )
                 }
 
                 // 버튼 클릭 시 유효성 검사 실행
-                Button(
+                DialogButton(
+                    text = "확인",
                     onClick = {
                         makeBlockDialogViewModel.validateBlock(
                             blockDialogState?.id,
@@ -381,10 +381,7 @@ fun MakeBlockDialog(
                             isCopy = false,
                         )
                     },
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(text = "확인")
-                }
+                )
 
             }
 
