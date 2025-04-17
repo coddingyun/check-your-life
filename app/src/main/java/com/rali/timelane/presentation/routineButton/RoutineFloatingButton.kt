@@ -40,6 +40,7 @@ fun RoutineFloatingButton(
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     var showConfirmDialog by remember { mutableStateOf(false) }
+    var showRoutineListDialog by remember { mutableStateOf(false) }
     val plannedActivities = activityViewModel.plannedActivities.collectAsState()
 
     Column(horizontalAlignment = Alignment.End) {
@@ -59,7 +60,7 @@ fun RoutineFloatingButton(
                 FabItem(
                     title = "루틴 넣기",
                     icon = Icons.AutoMirrored.Filled.List,
-                    onClicked = { /* ... */ }
+                    onClicked = { showRoutineListDialog = true }
                 )
             }
         }
@@ -86,14 +87,22 @@ fun RoutineFloatingButton(
                 isExpanded = false
                 routineViewModel.addRoutine(
                     Routine(
+                        title = "오늘의 루틴",
                         activities = plannedActivities.value
                     )
                 )
+                routineViewModel.getAllRoutines()
             },
             onDismiss = {
                 showConfirmDialog = false
                 isExpanded = false
             }
+        )
+    }
+
+    if (showRoutineListDialog) {
+        RoutineListDialog(
+            onDismiss = { showRoutineListDialog = false },
         )
     }
 }

@@ -8,5 +8,6 @@ import com.rali.checkyourlife.Activity
 data class Routine (
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
+    var title: String,
     val activities: List<Activity>,
 )

@@ -34,6 +34,4 @@ class RoutineViewModel @Inject constructor(
     fun removeAllRoutines() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAllRoutines()
     }
-
-
 }
