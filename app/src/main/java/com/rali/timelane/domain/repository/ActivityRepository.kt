@@ -16,6 +16,11 @@ class ActivityRepository @Inject constructor(
         activityDao.insertActivity(activity)
     }
 
+    // 여러 활동 한번에 추가
+    suspend fun insertActivities(activities: List<Activity>) {
+        activityDao.insertActivities(activities)
+    }
+
     // 계획된 활동 가져오기
     suspend fun getPlannedActivities(): Flow<List<Activity>> {
         return activityDao.getPlannedActivities().flowOn(Dispatchers.IO).conflate()
@@ -37,5 +42,9 @@ class ActivityRepository @Inject constructor(
 
     suspend fun deleteAllActivites() {
         activityDao.deleteAllActivites()
+    }
+
+    suspend fun deletePlannedActivitiesByDate(date: Long) {
+        activityDao.deletePlannedActivitiesByDate(date)
     }
 }

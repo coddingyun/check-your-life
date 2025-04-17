@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 data class HomeState(
-    var date: Long = 0,
+    val date: Long = 0,
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         homeState.value = HomeState(
-            date = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            date = getTodayMilliSeconds()
         )
     }
 
@@ -37,9 +37,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun formateDate(): String {
-        val currentDateTime =
-            Instant.ofEpochMilli(homeState.value?.date!!).atZone(ZoneId.systemDefault()).toLocalDateTime()
-        return DateTimeFormatter.ofPattern("yyyy년 MM월 dd일").format(currentDateTime)
+        return Instant.ofEpochMilli(homeState.value?.date!!)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+            .format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
     }
 
     fun minusDay1() {

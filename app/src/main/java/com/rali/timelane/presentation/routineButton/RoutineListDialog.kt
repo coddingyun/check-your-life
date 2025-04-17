@@ -1,7 +1,7 @@
 package com.rali.timelane.presentation.routineButton
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Text
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
@@ -9,8 +9,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rali.timelane.presentation.common.DialogCard
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RoutineListDialog(
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     routineViewModel: RoutineViewModel = hiltViewModel(),
 ) {
@@ -28,15 +30,11 @@ fun RoutineListDialog(
             onDismiss = onDismiss
         ){
             routines.value.forEach {
-                RoutineItem(routine = it)
+                RoutineItem(
+                    routine = it,
+                    onConfirm,
+                )
             }
         }
-    }
-}
-
-@Composable
-fun RoutineItem(routine: Routine) {
-    Row {
-        Text(text = routine.title)
     }
 }

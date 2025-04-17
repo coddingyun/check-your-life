@@ -43,6 +43,10 @@ class ActivityViewModel @Inject constructor(
         repository.insertActivity(activity)
     }
 
+    fun addActivities(activities: List<Activity>) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insertActivities(activities)
+    }
+
     fun updateActivity(activity: Activity) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateActivity(activity)
     }
@@ -53,5 +57,10 @@ class ActivityViewModel @Inject constructor(
 
     fun removeAllActivities() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAllActivites()
+    }
+
+    fun updateRoutine(date: Long, activities: List<Activity>) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deletePlannedActivitiesByDate(date)
+        repository.insertActivities(activities)
     }
 }

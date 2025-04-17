@@ -14,6 +14,9 @@ interface ActivityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertActivity(activity: Activity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertActivities(activities: List<Activity>)
+
     @Query("SELECT * FROM activities WHERE type = 'PLAN'")
     fun getPlannedActivities(): Flow<List<Activity>>
 
@@ -31,4 +34,7 @@ interface ActivityDao {
 
     @Query("DELETE FROM activities WHERE id = :activityId")
     fun deleteActivityById(activityId: Long)
+
+    @Query("DELETE FROM activities WHERE type = 'PLAN' AND date = :date")
+    fun deletePlannedActivitiesByDate(date: Long)
 }

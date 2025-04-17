@@ -1,5 +1,7 @@
 package com.rali.timelane.presentation.routineButton
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.rali.timelane.presentation.activityBlock.ActivityViewModel
 import com.rali.timelane.presentation.common.CustomAlertDialog
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RoutineFloatingButton(
     routineViewModel: RoutineViewModel = hiltViewModel(),
@@ -52,13 +55,13 @@ fun RoutineFloatingButton(
                     .padding(20.dp)
             ) {
                 FabItem(
-                    title = "오늘을 루틴으로 등록하기",
+                    title = "오늘 Plan을 루틴으로 등록하기",
                     icon = Icons.Filled.Add,
                     onClicked = { showMakeRoutineDialog = true }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 FabItem(
-                    title = "루틴 넣기",
+                    title = "오늘 Plan에 루틴 넣기",
                     icon = Icons.AutoMirrored.Filled.List,
                     onClicked = { showRoutineListDialog = true }
                 )
@@ -94,7 +97,14 @@ fun RoutineFloatingButton(
 
     if (showRoutineListDialog) {
         RoutineListDialog(
-            onDismiss = { showRoutineListDialog = false },
+            onConfirm = {
+                showRoutineListDialog = false
+                isExpanded = false
+            },
+            onDismiss = {
+                showRoutineListDialog = false
+                isExpanded = false
+            },
         )
     }
 }
