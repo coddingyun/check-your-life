@@ -33,9 +33,11 @@ fun RoutineItem(
     routine: Routine,
     onConfirm: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
-    activityViewModel: ActivityViewModel = hiltViewModel()
+    activityViewModel: ActivityViewModel = hiltViewModel(),
+    routineViewModel: RoutineViewModel = hiltViewModel(),
 ) {
     var showConfirmDialog by remember { mutableStateOf(false) }
+    var showRemoveConfirmDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -54,7 +56,7 @@ fun RoutineItem(
 
             IconButton(
                 onClick = {
-                    // TODO: 삭제 동작
+                    showRemoveConfirmDialog = true
                 },
                 modifier = Modifier
                     .size(24.dp)
@@ -73,7 +75,6 @@ fun RoutineItem(
             routineName = routine.title,
             onConfirm = {
                 val date = homeViewModel.homeState.value!!.date
-
                 val updatedActivities = routine.activities.map { activity ->
                     activity.copy(date = date)
                 }
@@ -84,6 +85,19 @@ fun RoutineItem(
             },
             onDismiss = {
                 showConfirmDialog = false
+            }
+        )
+    }
+
+    if (showRemoveConfirmDialog) {
+        RoutineRemoveConfirmDialog(
+            routineName = routine.title,
+            onConfirm = {
+                routineViewModel.removeRoutine(routine)
+                showRemoveConfirmDialog = false
+            },
+            onDismiss = {
+                showRemoveConfirmDialog = false
             }
         )
     }

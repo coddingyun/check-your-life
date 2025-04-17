@@ -4,15 +4,14 @@ import androidx.compose.runtime.Composable
 import com.rali.timelane.presentation.common.CustomAlertDialog
 
 @Composable
-fun RoutineConfirmDialog(
+fun RoutineRemoveConfirmDialog(
     routineName: String,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     CustomAlertDialog(
-        dialogTitle = "루틴 추가",
-        dialogText = "'${routineName}' 루틴을 오늘 Plan에 넣으시겠습니까?\n" +
-                "현재 존재하는 Plan은 모두 사라집니다.",
+        dialogTitle = "루틴 삭제",
+        dialogText = "'${routineName}' 루틴을 삭제하시겠습니까?",
         onConfirm,
         onDismiss
     )
