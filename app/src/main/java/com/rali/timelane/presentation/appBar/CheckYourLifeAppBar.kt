@@ -1,6 +1,7 @@
 package com.rali.checkyourlife
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +39,7 @@ fun CheckYourLifeAppBar(
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val homeState = homeViewModel.homeState.value
+    val koreaZoneId = ZoneId.of("Asia/Seoul")
 
     TopAppBar(
         title = {
@@ -64,8 +69,16 @@ fun CheckYourLifeAppBar(
     )
     
     if (showDatePicker) {
+        val initialUtcMillis = homeState?.date?.let { localMillis ->
+            Instant.ofEpochMilli(localMillis)
+                .atZone(koreaZoneId)
+                .toLocalDate()
+                .atStartOfDay(ZoneOffset.UTC)
+                .toInstant()
+                .toEpochMilli()
+        } ?: null
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = homeState?.date
+            initialSelectedDateMillis = initialUtcMillis
         )
         
         DatePickerDialog(
@@ -74,7 +87,15 @@ fun CheckYourLifeAppBar(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            homeViewModel.setDate(millis)
+                            val localDate = Instant.ofEpochMilli(millis)
+                                .atZone(koreaZoneId)
+                                .toLocalDate()
+                            val correctedMillis = localDate
+                                .atStartOfDay(koreaZoneId)
+                                .toInstant()
+                                .toEpochMilli()
+
+                            homeViewModel.setDate(correctedMillis)
                         }
                         showDatePicker = false
                     }
